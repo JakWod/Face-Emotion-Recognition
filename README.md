@@ -43,7 +43,7 @@ Results can be saved to a personal archive, browsed later, and managed from your
 | Layer | Technology |
 |---|---|
 | Backend | Python 3.11.9, Flask |
-| Database | MySQL 8.2.12 |
+| Database | MySQL 8.0 |
 | Email | Flask-Mail (Gmail SMTP) |
 | Face detection | OpenCV Haar Cascades |
 | Emotion analysis | FER library (MTCNN backbone) |
