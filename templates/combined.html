@@ -1,0 +1,3943 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="neural">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FER Analysis | Facial Emotion Recognition</title>
+    <meta name="description" content="Advanced facial emotion recognition and analysis platform powered by deep learning.">
+    <meta name="theme-color" content="#0a0e1a">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+/* ========================================================================
+   CSS CUSTOM PROPERTIES (THEMES)
+   ======================================================================== */
+
+/* --- Theme: Neural (default dark, deep blue/cyan AI aesthetic) --- */
+:root,
+[data-theme="neural"] {
+    --bg: #0d1117;
+    --bg-elevated: #161b22;
+    --bg-card: #1c2333;
+    --bg-card-hover: #222d3f;
+    --bg-overlay: rgba(13, 17, 23, 0.85);
+    --bg-input: #1c2333;
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: lab(59.3584% -2.95946 -10.5563);
+    --accent: #58a6ff;
+    --accent-dim: rgba(88, 166, 255, 0.15);
+    --accent-glow: rgba(88, 166, 255, 0.12);
+    --border: #30363d;
+    --border-accent: rgba(88, 166, 255, 0.4);
+    --destructive: #f85149;
+    --destructive-dim: rgba(248, 81, 73, 0.15);
+    --success: #3fb950;
+    --success-dim: rgba(63, 185, 80, 0.15);
+    --sidebar-bg: #0a0e14;
+    --sidebar-border: #21262d;
+    --sidebar-hover: #161b22;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-xs: 6px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+    --shadow-lg: 0 8px 30px rgba(0,0,0,0.5);
+    --shadow-glow: 0 0 20px var(--accent-glow), 0 0 60px var(--accent-glow);
+    --emotion-happy: #e3b341;
+    --emotion-sad: #58a6ff;
+    --emotion-angry: #f85149;
+    --emotion-surprise: #bc8cff;
+    --emotion-fear: #8b949e;
+    --emotion-disgust: #3fb950;
+    --emotion-neutral: #6e7681;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* --- Theme: Glass (frosted glass with animated bg) --- */
+[data-theme="glass"] {
+    --bg: #0b0f1a;
+    --bg-elevated: rgba(22, 28, 45, 0.6);
+    --bg-card: rgba(30, 38, 60, 0.45);
+    --bg-card-hover: rgba(40, 50, 75, 0.5);
+    --bg-overlay: rgba(11, 15, 26, 0.85);
+    --bg-input: rgba(30, 38, 60, 0.5);
+    --text-primary: #f0f2f8;
+    --text-secondary: #9ba4b8;
+    --text-muted: lab(59.3584% -2.95946 -10.5563);
+    --accent: #5de4c7;
+    --accent-dim: rgba(93, 228, 199, 0.12);
+    --accent-glow: rgba(93, 228, 199, 0.1);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-accent: rgba(93, 228, 199, 0.35);
+    --destructive: #f85149;
+    --destructive-dim: rgba(248, 81, 73, 0.15);
+    --success: #5de4c7;
+    --success-dim: rgba(93, 228, 199, 0.12);
+    --sidebar-bg: rgba(8, 12, 22, 0.7);
+    --sidebar-border: rgba(255, 255, 255, 0.06);
+    --sidebar-hover: rgba(30, 38, 60, 0.5);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --radius-xs: 8px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.3);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.35);
+    --shadow-glow: 0 0 25px var(--accent-glow), 0 0 80px var(--accent-glow);
+    --emotion-happy: #e3b341;
+    --emotion-sad: #7aa2f7;
+    --emotion-angry: #f7768e;
+    --emotion-surprise: #bb9af7;
+    --emotion-fear: #9ba4b8;
+    --emotion-disgust: #9ece6a;
+    --emotion-neutral: #5a6380;
+}
+
+/* --- Theme: Minimal (clean, light) --- */
+[data-theme="minimal"] {
+    --bg: #fafbfc;
+    --bg-elevated: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f6f8fa;
+    --bg-overlay: rgba(250, 251, 252, 0.92);
+    --bg-input: #f6f8fa;
+    --text-primary: #1f2328;
+    --text-secondary: #656d76;
+    --text-muted: lab(41.9742% -2.00994 -7.05371);
+    --accent: #0969da;
+    --accent-dim: rgba(9, 105, 218, 0.08);
+    --accent-glow: rgba(9, 105, 218, 0.06);
+    --border: #d0d7de;
+    --border-accent: rgba(9, 105, 218, 0.4);
+    --destructive: #cf222e;
+    --destructive-dim: rgba(207, 34, 46, 0.08);
+    --success: #1a7f37;
+    --success-dim: rgba(26, 127, 55, 0.08);
+    --sidebar-bg: #f6f8fa;
+    --sidebar-border: #d0d7de;
+    --sidebar-hover: #eaeef2;
+    --radius: 8px;
+    --radius-sm: 6px;
+    --radius-xs: 4px;
+    --shadow-sm: 0 1px 2px rgba(31,35,40,0.04);
+    --shadow-md: 0 3px 8px rgba(31,35,40,0.08);
+    --shadow-lg: 0 6px 20px rgba(31,35,40,0.12);
+    --shadow-glow: 0 0 12px var(--accent-glow);
+    --emotion-happy: #bf8700;
+    --emotion-sad: #0969da;
+    --emotion-angry: #cf222e;
+    --emotion-surprise: #8250df;
+    --emotion-fear: #656d76;
+    --emotion-disgust: #1a7f37;
+    --emotion-neutral: #8c959f;
+}
+
+/* ========================================================================
+   RESET & BASE
+   ======================================================================== */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ========================================================================
+   ANIMATED BACKGROUNDS
+   ======================================================================== */
+#animatedBg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Neural canvas bg */
+#neuralCanvas {
+    position: fixed;
+    inset: 0;
+    display: block;
+}
+
+/* Glass orbs */
+.glass-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+}
+.glass-orb-1 {
+    width: 55vw; height: 55vw;
+    top: -15%; left: -15%;
+    background: radial-gradient(circle, rgba(93,228,199,0.18) 0%, transparent 70%);
+    animation: floatOrb 20s ease-in-out infinite, pulseGlow 8s ease-in-out infinite;
+}
+.glass-orb-2 {
+    width: 45vw; height: 45vw;
+    bottom: -15%; right: -15%;
+    background: radial-gradient(circle, rgba(122,162,247,0.15) 0%, transparent 70%);
+    animation: floatOrb 25s ease-in-out infinite reverse, pulseGlow 10s ease-in-out infinite 2s;
+}
+.glass-orb-3 {
+    width: 35vw; height: 35vw;
+    top: 35%; left: 50%;
+    background: radial-gradient(circle, rgba(187,154,247,0.10) 0%, transparent 70%);
+    animation: meshRotate 30s linear infinite, pulseGlow 12s ease-in-out infinite 4s;
+}
+.glass-grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 60px 60px;
+}
+
+/* Minimal dots */
+.minimal-dots {
+    position: absolute;
+    inset: 0;
+    opacity: 0.35;
+    background-image: radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);
+    background-size: 32px 32px;
+}
+
+/* Glass card utility */
+[data-theme="glass"] .card {
+    backdrop-filter: blur(20px) saturate(1.8);
+    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+    border: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+@keyframes floatOrb {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    33% { transform: translateY(-25px) rotate(1deg); }
+    66% { transform: translateY(15px) rotate(-1deg); }
+}
+@keyframes pulseGlow {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+}
+@keyframes meshRotate {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+@keyframes ping {
+    75%, 100% { transform: scale(2); opacity: 0; }
+}
+
+/* ========================================================================
+   SIDEBAR
+   ======================================================================== */
+.sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100%;
+    width: 260px;
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-border);
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+.sidebar.collapsed {
+    width: 56px;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    height: 56px;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--sidebar-border);
+    flex-shrink: 0;
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.logo-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-xs);
+    background: var(--accent-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.logo-icon span {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+}
+.logo-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.sidebar-toggle {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-xs);
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
+    font-size: 14px;
+}
+.sidebar-toggle:hover {
+    background: var(--sidebar-hover);
+    color: var(--text-primary);
+}
+
+/* Sidebar sections hidden when collapsed */
+.sidebar.collapsed .sidebar-body,
+.sidebar.collapsed .sidebar-footer,
+.sidebar.collapsed .logo-text {
+    display: none;
+}
+
+.sidebar-body {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-search {
+    padding: 12px;
+    flex-shrink: 0;
+}
+.sidebar-search input {
+    width: 100%;
+    height: 32px;
+    padding: 0 10px 0 32px;
+    font-size: 13px;
+    font-family: var(--font-sans);
+    background: var(--sidebar-hover);
+    border: 1px solid var(--sidebar-border);
+    border-radius: var(--radius-xs);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.15s;
+}
+.sidebar-search input::placeholder { color: var(--text-muted); }
+.sidebar-search input:focus { border-color: var(--accent); }
+.sidebar-search-wrap {
+    position: relative;
+}
+.sidebar-search-wrap i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.sidebar-filters {
+    padding: 0 12px 8px;
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+.sidebar-filters .filter-col {
+    flex: 1;
+}
+.sidebar-filters label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+.sidebar-filters input[type="date"] {
+    width: 100%;
+    height: 28px;
+    padding: 0 6px;
+    font-size: 11px;
+    font-family: var(--font-sans);
+    background: var(--sidebar-hover);
+    border: 1px solid var(--sidebar-border);
+    border-radius: var(--radius-xs);
+    color: var(--text-secondary);
+    outline: none;
+}
+.sidebar-filters input[type="date"]:focus { border-color: var(--accent); }
+
+.clear-filters-btn {
+    display: none;
+    width: calc(100% - 24px);
+    margin: 0 12px 8px;
+    padding: 4px;
+    font-size: 10px;
+    font-family: var(--font-sans);
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: var(--radius-xs);
+    transition: color 0.15s, background 0.15s;
+}
+.clear-filters-btn:hover {
+    color: var(--text-primary);
+    background: var(--sidebar-hover);
+}
+
+.archive-title {
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+}
+
+.archive-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 8px 8px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.archive-list::-webkit-scrollbar { display: none; }
+
+.archive-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    margin-bottom: 2px;
+    border-radius: var(--radius-sm);
+    /*border-left: 2px solid transparent;*/
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.archive-item:hover {
+    background: var(--sidebar-hover);
+    border-left-color: var(--accent);
+}
+.archive-item.active {
+    background: var(--accent-dim);
+    border-left-color: var(--accent);
+}
+@keyframes archiveHighlight {
+    0%   { background: rgba(88, 166, 255, 0.06); border-left-color: var(--border-accent); }
+    60%  { background: rgba(88, 166, 255, 0.06); border-left-color: var(--border-accent); }
+    100% { background: transparent; border-left-color: transparent; }
+}
+.archive-item.highlight-flash {
+    animation: archiveHighlight 1.6s ease-out forwards;
+}
+.archive-item-content {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+.archive-item-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+.archive-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+}
+.archive-item-meta span {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    color: var(--text-muted);
+}
+.archive-item-meta i { font-size: 9px; }
+.archive-item-meta svg { width: 9px; height: 9px; flex-shrink: 0; }
+
+.archive-item-delete {
+    opacity: 0;
+    padding: 4px 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    border-radius: var(--radius-xs);
+    transition: all 0.15s;
+    flex-shrink: 0;
+    font-size: 11px;
+}
+.archive-item-delete svg { width: 11px; height: 11px; flex-shrink: 0; }
+.archive-item:hover .archive-item-delete { opacity: 1; }
+.archive-item-delete:hover { background: var(--destructive-dim); color: var(--destructive); }
+
+.archive-empty {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--text-muted);
+}
+.archive-empty i {
+    font-size: 28px;
+    opacity: 0.3;
+    margin-bottom: 8px;
+    display: block;
+}
+.archive-empty p { font-size: 12px; }
+
+.sidebar-footer {
+    border-top: 1px solid var(--sidebar-border);
+    padding: 6px;
+    flex-shrink: 0;
+}
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: var(--radius-sm);
+    transition: background 0.15s;
+}
+.user-profile:hover { background: var(--sidebar-hover); }
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.user-avatar span {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+}
+.user-info { min-width: 0; }
+.user-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+.user-role {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+/* Collapsed sidebar icons */
+.sidebar-collapsed-icons {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding-top: 16px;
+}
+.sidebar.collapsed .sidebar-collapsed-icons { display: flex; }
+.collapsed-icon-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-xs);
+    font-size: 14px;
+    transition: background 0.15s, color 0.15s;
+}
+.collapsed-icon-btn:hover {
+    background: var(--sidebar-hover);
+    color: var(--text-primary);
+}
+.collapsed-divider {
+    width: 24px;
+    height: 1px;
+    background: var(--sidebar-border);
+}
+
+/* ========================================================================
+   MAIN CONTENT
+   ======================================================================== */
+.main-content {
+    position: relative;
+    z-index: 10;
+    margin-left: 260px;
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 100vh;
+}
+.main-content.expanded {
+    margin-left: 56px;
+}
+
+/* ========================================================================
+   HEADER
+   ======================================================================== */
+.top-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    height: 56px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-overlay);
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.header-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+.header-badges {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.header-badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+.header-badge i { font-size: 13px; }
+.header-badge svg { width: 13px; height: 13px; flex-shrink: 0; }
+.header-sep {
+    color: var(--border);
+    font-size: 12px;
+}
+
+/* Theme Switcher */
+.theme-switcher {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+}
+.theme-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    border-radius: var(--radius-xs);
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+.theme-btn:hover { color: var(--text-primary); background: var(--bg-card); }
+.theme-btn.active {
+    background: var(--accent);
+    color: var(--bg);
+    box-shadow: var(--shadow-sm);
+}
+.theme-btn i { font-size: 12px; }
+.theme-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+
+@media (max-width: 768px) {
+    .header-badges { display: none; }
+    .theme-btn span { display: none; }
+}
+
+/* ========================================================================
+   CONTENT AREA
+   ======================================================================== */
+.content-area {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+/* Stat strip */
+.stats-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+@media (max-width: 640px) {
+    .stats-strip { grid-template-columns: repeat(2, 1fr); }
+}
+.stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    backdrop-filter: blur(8px);
+}
+.stat-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+}
+.stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+.stat-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 1px;
+}
+
+/* ========================================================================
+   CARDS (shared)
+   ======================================================================== */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    margin-bottom: 24px;
+    transition: all 0.3s;
+}
+
+.card-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+}
+.card-badge i { font-size: 12px; }
+.card-badge svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+.card-heading {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    text-wrap: balance;
+}
+.card-sub {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* ========================================================================
+   SOURCE SELECTOR
+   ======================================================================== */
+.source-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    max-width: 480px;
+    margin: 32px auto 0;
+}
+@media (max-width: 480px) {
+    .source-selector-grid { grid-template-columns: 1fr; }
+}
+.source-btn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 32px 20px;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-sans);
+}
+.source-btn:hover {
+    border-color: var(--border-accent);
+    background: var(--accent-dim);
+}
+.source-btn-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-sm);
+    background: var(--accent-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+.source-btn:hover .source-btn-icon { background: var(--accent-dim); }
+.source-btn-icon i { font-size: 22px; color: var(--accent); }
+.source-btn-icon svg { width: 22px; height: 22px; color: var(--accent); }
+.source-btn-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+.source-btn-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+.source-btn-arrow {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 14px;
+    color: var(--text-muted);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+.source-btn:hover .source-btn-arrow { opacity: 1; }
+
+/* Hidden file input */
+#imageInput { display: none; }
+
+/* ========================================================================
+   CAMERA SECTION
+   ======================================================================== */
+.camera-section {
+    display: none;
+}
+.camera-section.visible { display: block; }
+
+.camera-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.camera-live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--destructive);
+    animation: pulseGlow 2s infinite;
+}
+.camera-live-badge {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--destructive);
+    background: var(--destructive-dim);
+    padding: 2px 8px;
+    border-radius: 100px;
+}
+
+.camera-viewport {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 2px solid var(--border-accent);
+    background: var(--bg-elevated);
+    margin-bottom: 16px;
+}
+.camera-viewport img {
+    width: 100%;
+    height: 100%;
+    /* object-fit: contain; */
+}
+.camera-corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: var(--accent);
+    opacity: 0.5;
+}
+.camera-corner.tl { top: 12px; left: 12px; border-top: 2px solid; border-left: 2px solid; border-top-left-radius: 2px; }
+.camera-corner.tr { top: 12px; right: 12px; border-top: 2px solid; border-right: 2px solid; border-top-right-radius: 2px; }
+.camera-corner.bl { bottom: 12px; left: 12px; border-bottom: 2px solid; border-left: 2px solid; border-bottom-left-radius: 2px; }
+.camera-corner.br { bottom: 12px; right: 12px; border-bottom: 2px solid; border-right: 2px solid; border-bottom-right-radius: 2px; }
+
+/* ========================================================================
+   BUTTONS
+   ======================================================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+.btn i { font-size: 13px; }
+.btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+.btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+}
+.btn-primary:hover { filter: brightness(1.1); box-shadow: var(--shadow-glow); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; filter: none; box-shadow: none; }
+
+.btn-outline {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+.btn-outline:hover { background: var(--bg-elevated); border-color: var(--text-muted); }
+
+.btn-destructive {
+    background: var(--destructive);
+    color: #fff;
+}
+.btn-destructive:hover { filter: brightness(1.1); }
+
+.btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+}
+.btn-ghost:hover { color: var(--text-primary); background: var(--bg-elevated); }
+
+.btn-warning {
+    background: #f5c518;
+    color: #1a1209;
+    border: none;
+}
+.btn-warning:hover { filter: brightness(1.1); }
+
+.btn-muted {
+    background: #9ca3af;
+    color: #000000;
+    border: none;
+}
+.btn-muted:hover { filter: brightness(1.08); }
+
+.btn-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-enhance {
+    background: #7c3aed;
+    color: #fff;
+}
+.btn-enhance:hover { background: #6d28d9; }
+.btn-enhance:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Enhance modal */
+.enhance-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: var(--shadow-lg);
+}
+[data-theme="glass"] .enhance-content {
+    backdrop-filter: blur(20px) saturate(1.8);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+.enhance-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+}
+.enhance-models {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+.enhance-model-card {
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    background: var(--bg-elevated);
+}
+.enhance-model-card:hover { border-color: var(--accent); }
+.enhance-model-card.selected {
+    border-color: #7c3aed;
+    background: rgba(124,58,237,0.08);
+}
+.enhance-model-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+.enhance-model-radio {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    transition: border-color 0.15s, background 0.15s;
+}
+.enhance-model-card.selected .enhance-model-radio {
+    border-color: #7c3aed;
+    background: #7c3aed;
+}
+.enhance-model-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.enhance-model-tag {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 99px;
+    background: rgba(124,58,237,0.15);
+    color: #a78bfa;
+}
+.enhance-model-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-left: 26px;
+}
+.enhance-model-stats {
+    display: flex;
+    gap: 16px;
+    margin-top: 8px;
+    margin-left: 26px;
+}
+.enhance-stat { display: flex; flex-direction: column; gap: 2px; }
+.enhance-stat-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.enhance-stat-value {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.enhance-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* ========================================================================
+   FACES SECTION
+   ======================================================================== */
+.faces-section { display: none; }
+.faces-section.visible { display: block; }
+
+.faces-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.faces-count {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.faces-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.face-card {
+    position: relative;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 2px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    aspect-ratio: 1;
+    background: var(--bg-elevated);
+}
+.face-card:hover { border-color: var(--border-accent); }
+.face-card.selected {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-glow);
+}
+.face-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.face-card-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+.face-card-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+.face-card-label {
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+.face-check {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    transition: all 0.2s;
+}
+.face-card:not(.selected) .face-check {
+    background: var(--bg-overlay);
+    color: var(--text-muted);
+    opacity: 0;
+}
+.face-card:hover:not(.selected) .face-check { opacity: 1; }
+.face-card.selected .face-check {
+    background: var(--accent);
+    color: var(--bg);
+    opacity: 1;
+}
+
+.face-card-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, var(--bg-overlay), transparent);
+    padding: 8px;
+    text-align: center;
+}
+.face-card-bottom span {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+/* ========================================================================
+   MANUAL SELECTION
+   ======================================================================== */
+.manual-section { display: none; }
+.manual-section.visible { display: block; }
+
+.manual-canvas-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+#manualSelectionCanvas {
+    cursor: crosshair;
+    border: 2px solid var(--accent);
+    border-radius: var(--radius-sm);
+    max-width: 100%;
+}
+
+/* ========================================================================
+   RESULTS SECTION
+   ======================================================================== */
+.results-section { display: none; }
+.results-section.visible { display: block; }
+
+/* Results header card */
+.results-header-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+.results-count-badge {
+    font-size: 12px;
+    font-family: var(--font-mono);
+    background: var(--accent-dim);
+    color: var(--accent);
+    padding: 4px 10px;
+    border-radius: var(--radius-xs);
+}
+
+/* Custom name input */
+.custom-name-card {
+    display: none;
+    margin-bottom: 24px;
+}
+.custom-name-card.visible { display: block; }
+.custom-name-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+.custom-name-label i { color: var(--accent); }
+.custom-name-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 14px;
+    font-size: 14px;
+    font-family: var(--font-sans);
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.15s;
+}
+.custom-name-input::placeholder { color: var(--text-muted); }
+.custom-name-input:focus { border-color: var(--accent); }
+
+/* Face result cards */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.results-grid .face-result-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+}
+@media (max-width: 480px) {
+    .results-grid { grid-template-columns: 1fr; }
+}
+
+.face-result-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: box-shadow 0.2s;
+}
+.face-result-card:hover { box-shadow: var(--shadow-md); }
+[data-theme="glass"] .face-result-card {
+    backdrop-filter: blur(20px) saturate(1.8);
+    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.face-result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+}
+.face-result-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.face-result-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-xs);
+    background: var(--accent-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--accent);
+}
+.face-result-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.face-result-subtitle {
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+.dominant-badge {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: var(--bg-elevated);
+}
+
+/* Emotion bars */
+.emotion-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+.emotion-label {
+    font-size: 12px;
+    font-weight: 500;
+    width: 64px;
+    flex-shrink: 0;
+}
+.emotion-track {
+    flex: 1;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--bg-elevated);
+    overflow: hidden;
+}
+.emotion-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease-out;
+    opacity: 0.85;
+}
+.emotion-value {
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    width: 48px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.edit-emotions-btn {
+    width: 100%;
+    margin-top: 16px;
+}
+
+/* Analyzed image container */
+.analyzed-image-card .card-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.analyzed-image-card .card-heading i { color: var(--accent); }
+.analyzed-image-card img {
+    width: 100%;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    margin-top: 12px;
+}
+
+/* Action buttons card */
+.actions-card {
+    padding: 20px;
+}
+/* .actions-card .btn-group {
+     border-top: 1px solid var(--border);
+    padding-top: 20px; }*/
+
+
+/* ========================================================================
+   MODALS
+   ======================================================================== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-overlay);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+.modal-overlay.visible {
+    display: flex;
+}
+
+/* Loading modal */
+.loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px;
+    box-shadow: var(--shadow-lg);
+}
+[data-theme="glass"] .loading-content {
+    backdrop-filter: blur(20px) saturate(1.8);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+.loading-spinner-wrap {
+    position: relative;
+    width: 48px;
+    height: 48px;
+}
+.loading-spinner {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-dim);
+    border-top-color: var(--accent);
+    animation: spin 1s linear infinite;
+}
+.loading-ping {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+.loading-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+.loading-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+/* Edit modal */
+.edit-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    width: 420px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+}
+.edit-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+}
+.edit-slider-row {
+    margin-bottom: 16px;
+}
+.edit-slider-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+.edit-slider-label {
+    font-size: 13px;
+    font-weight: 500;
+}
+.edit-slider-value {
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+}
+
+/* Custom slider */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: var(--bg-elevated);
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); }
+input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    cursor: pointer;
+}
+input[type="range"]:focus::-webkit-slider-thumb { box-shadow: 0 0 0 3px var(--accent-dim); }
+input[type="range"]:focus::-moz-range-thumb { box-shadow: 0 0 0 3px var(--accent-dim); }
+
+/* Emotion-specific slider thumb colors */
+.slider-happy::-webkit-slider-thumb { background: var(--emotion-happy) !important; }
+.slider-happy::-moz-range-thumb { background: var(--emotion-happy) !important; }
+.slider-sad::-webkit-slider-thumb { background: var(--emotion-sad) !important; }
+.slider-sad::-moz-range-thumb { background: var(--emotion-sad) !important; }
+.slider-angry::-webkit-slider-thumb { background: var(--emotion-angry) !important; }
+.slider-angry::-moz-range-thumb { background: var(--emotion-angry) !important; }
+.slider-surprise::-webkit-slider-thumb { background: var(--emotion-surprise) !important; }
+.slider-surprise::-moz-range-thumb { background: var(--emotion-surprise) !important; }
+.slider-fear::-webkit-slider-thumb { background: var(--emotion-fear) !important; }
+.slider-fear::-moz-range-thumb { background: var(--emotion-fear) !important; }
+.slider-disgust::-webkit-slider-thumb { background: var(--emotion-disgust) !important; }
+.slider-disgust::-moz-range-thumb { background: var(--emotion-disgust) !important; }
+.slider-neutral::-webkit-slider-thumb { background: var(--emotion-neutral) !important; }
+.slider-neutral::-moz-range-thumb { background: var(--emotion-neutral) !important; }
+
+.edit-total {
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    margin: 16px 0;
+}
+.edit-total.ok { color: var(--success); }
+.edit-total.bad { color: var(--destructive); }
+
+.edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* ========================================================================
+   RESPONSIVE
+   ======================================================================== */
+@media (max-width: 768px) {
+    .sidebar { width: 56px; }
+    .sidebar .sidebar-body,
+    .sidebar .sidebar-footer,
+    .sidebar .logo-text { display: none; }
+    .sidebar .sidebar-collapsed-icons { display: flex; }
+    .main-content { margin-left: 56px !important; }
+    .content-area { padding: 16px; }
+}
+
+/* ========================================================================
+   AUTH MODAL
+   ======================================================================== */
+.auth-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    width: 100%;
+    max-width: 400px;
+    max-height: 736px;
+}
+.auth-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+.auth-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+}
+.auth-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+.auth-field label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+.auth-field input {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 14px;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.15s;
+}
+.auth-field input:focus { border-color: var(--accent); }
+.auth-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+.auth-switch {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 16px;
+}
+.auth-switch a {
+    color: var(--accent);
+    cursor: pointer;
+    text-decoration: none;
+}
+.auth-switch a:hover { text-decoration: underline; }
+.auth-error {
+    background: var(--destructive-dim, rgba(248,81,73,0.1));
+    border: 1px solid var(--destructive);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 13px;
+    color: var(--destructive);
+    margin-bottom: 12px;
+    display: none;
+}
+.auth-success {
+    background: var(--success-dim);
+    border: 1px solid var(--success);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 13px;
+    color: var(--success);
+    margin-bottom: 12px;
+    display: none;
+}
+.auth-code-input {
+    font-size: 28px !important;
+    letter-spacing: 12px;
+    text-align: center;
+    font-weight: 600;
+}
+.auth-timer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 8px;
+}
+.pw-requirements {
+    list-style: none;
+    padding: 4px 0 2px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.pw-requirements li {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color .15s;
+}
+.pw-requirements li::before { content: '✗'; font-size: 10px; flex-shrink: 0; }
+.pw-requirements li.met { color: #4caf50; }
+.pw-requirements li.met::before { content: '✓'; color: #4caf50; }
+.auth-timer span { color: var(--accent); font-weight: 600; }
+.auth-avatar-big {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    border: 2px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 0 auto 16px;
+}
+    </style>
+</head>
+<body>
+
+<!-- ====================================================================
+     ANIMATED BACKGROUND
+     ==================================================================== -->
+<div id="animatedBg">
+    <!-- Neural: canvas (drawn via JS) -->
+    <canvas id="neuralCanvas" aria-hidden="true"></canvas>
+    <!-- Glass: floating orbs + grid -->
+    <div id="glassBg" style="display:none;">
+        <div class="glass-orb glass-orb-1"></div>
+        <div class="glass-orb glass-orb-2"></div>
+        <div class="glass-orb glass-orb-3"></div>
+        <div class="glass-grid"></div>
+    </div>
+    <!-- Minimal: dot pattern -->
+    <div id="minimalBg" style="display:none;">
+        <div class="minimal-dots"></div>
+    </div>
+</div>
+
+<!-- ====================================================================
+     SIDEBAR
+     ==================================================================== -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <div class="logo-icon"><span>FER</span></div>
+            <span class="logo-text">Analysis</span>
+        </div>
+        <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+    </div>
+
+    <div class="sidebar-body">
+        <div class="sidebar-search">
+            <div class="sidebar-search-wrap">
+                <i class="fas fa-search"></i>
+                <input type="search" placeholder="Search archive..." id="searchInput" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="sidebar-filters">
+            <div class="filter-col">
+                <label>From</label>
+                <input type="date" id="filterDateFrom">
+            </div>
+            <div class="filter-col">
+                <label>To</label>
+                <input type="date" id="filterDateTo">
+            </div>
+        </div>
+
+        <button class="clear-filters-btn" id="clearFiltersBtn" onclick="clearFilters()">
+            <i class="fas fa-times" style="margin-right:4px;"></i>Clear filters
+        </button>
+
+        <div class="archive-title" id="archiveTitle">Archive (0)</div>
+
+        <div class="archive-list" id="archiveList">
+            <div class="archive-empty" id="archiveEmpty">
+                <i class="fas fa-image"></i>
+                <p>No entries found</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar-footer">
+        <!-- Shown when logged out -->
+        <div id="sidebarAuthButtons" style="display:flex;gap:6px;padding:8px 12px;">
+            <button class="btn btn-primary" style="flex:1;font-size:12px;padding:6px 0;" onclick="openAuthModal('login')">Log In</button>
+            <button class="btn btn-outline" style="flex:1;font-size:12px;padding:6px 0;" onclick="openAuthModal('register')">Register</button>
+        </div>
+        <!-- Shown when logged in -->
+        <div class="user-profile" id="sidebarUserProfile" style="display:none;" onclick="openAuthModal()">
+            <div class="user-avatar" id="sidebarAvatar"><span>?</span></div>
+            <div class="user-info">
+                <div class="user-name" id="sidebarUserName">Not logged in</div>
+                <div class="user-role" id="sidebarUserRole">Click to log in</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar-collapsed-icons">
+        <div class="logo-icon"><span>F</span></div>
+        <div class="collapsed-divider"></div>
+        <button class="collapsed-icon-btn" aria-label="Search" onclick="expandAndFocusSearch()"><i class="fas fa-search"></i></button>
+        <button class="collapsed-icon-btn" aria-label="Calendar" onclick="expandAndScrollToCurrent()"><i class="fas fa-calendar"></i></button>
+        <button class="collapsed-icon-btn" id="collapsedProfileBtn" aria-label="Profile" onclick="openAuthModal()" style="margin-top:auto;"><i class="fas fa-user"></i></button>
+    </div>
+</aside>
+
+<!-- ====================================================================
+     MAIN CONTENT
+     ==================================================================== -->
+<div class="main-content" id="mainContent">
+
+    <!-- Top Header -->
+    <header class="top-header">
+        <div class="header-left">
+            <span class="header-title">FER Analysis</span>
+            <div class="header-badges">
+                <span class="header-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 18V5"></path><path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4"></path><path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"></path><path d="M17.997 5.125a4 4 0 0 1 2.526 5.77"></path><path d="M18 18a4 4 0 0 0 2-7.464"></path><path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517"></path><path d="M6 18a4 4 0 0 1-2-7.464"></path><path d="M6.003 5.125a4 4 0 0 0-2.526 5.77"></path></svg> Deep Learning</span>
+                <span class="header-sep">|</span>
+                <span class="header-badge"><i class="fas fa-chart-bar"></i> 7 Emotions</span>
+                <span class="header-sep">|</span>
+                <span class="header-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path></svg> Real-time</span>
+            </div>
+        </div>
+        <div class="theme-switcher" id="themeSwitcher">
+            <button class="theme-btn active" data-theme="neural" onclick="setTheme('neural')" title="Dark AI aesthetic">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg><span>Neural</span>
+            </button>
+            <button class="theme-btn" data-theme="glass" onclick="setTheme('glass')" title="Frosted glass with animations">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"></path><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"></path><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"></path></svg><span>Glass</span>
+            </button>
+            <button class="theme-btn" data-theme="minimal" onclick="setTheme('minimal')" title="Clean & light">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="3" rx="2"></rect><line x1="8" x2="16" y1="21" y2="21"></line><line x1="12" x2="12" y1="17" y2="21"></line></svg><span>Minimal</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="content-area">
+
+        <!-- Stats Strip -->
+        <div class="stats-strip" id="statsStrip">
+            <div class="stat-card">
+                <div class="stat-label">Total Analyses</div>
+                <div class="stat-value" id="statTotal">0</div>
+                <div class="stat-sub">entries</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Faces Detected</div>
+                <div class="stat-value" id="statFaces">0</div>
+                <div class="stat-sub">cumulative</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Accuracy</div>
+                <div class="stat-value">94.7%</div>
+                <div class="stat-sub">avg. confidence</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Model</div>
+                <div class="stat-value">FER+</div>
+                <div class="stat-sub">MTCNN pipeline</div>
+            </div>
+        </div>
+
+        <!-- Source Selector -->
+        <div class="card" id="sourceSection">
+            <div style="text-align:center;">
+                <div class="card-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path></svg> Input Source</div>
+                <h2 class="card-heading">Select an image or camera to begin analysis</h2>
+            </div>
+            <div class="source-selector-grid">
+                <button class="source-btn" onclick="document.getElementById('imageInput').click()">
+                    <div class="source-btn-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.5535 2.49392C12.4114 2.33852 12.2106 2.25 12 2.25C11.7894 2.25 11.5886 2.33852 11.4465 2.49392L7.44648 6.86892C7.16698 7.17462 7.18822 7.64902 7.49392 7.92852C7.79963 8.20802 8.27402 8.18678 8.55352 7.88108L11.25 4.9318V16C11.25 16.4142 11.5858 16.75 12 16.75C12.4142 16.75 12.75 16.4142 12.75 16V4.9318L15.4465 7.88108C15.726 8.18678 16.2004 8.20802 16.5061 7.92852C16.8118 7.64902 16.833 7.17462 16.5535 6.86892L12.5535 2.49392Z" fill="currentColor"/><path d="M3.75 15C3.75 14.5858 3.41422 14.25 3 14.25C2.58579 14.25 2.25 14.5858 2.25 15V15.0549C2.24998 16.4225 2.24996 17.5248 2.36652 18.3918C2.48754 19.2919 2.74643 20.0497 3.34835 20.6516C3.95027 21.2536 4.70814 21.5125 5.60825 21.6335C6.47522 21.75 7.57754 21.75 8.94513 21.75H15.0549C16.4225 21.75 17.5248 21.75 18.3918 21.6335C19.2919 21.5125 20.0497 21.2536 20.6517 20.6516C21.2536 20.0497 21.5125 19.2919 21.6335 18.3918C21.75 17.5248 21.75 16.4225 21.75 15.0549V15C21.75 14.5858 21.4142 14.25 21 14.25C20.5858 14.25 20.25 14.5858 20.25 15C20.25 16.4354 20.2484 17.4365 20.1469 18.1919C20.0482 18.9257 19.8678 19.3142 19.591 19.591C19.3142 19.8678 18.9257 20.0482 18.1919 20.1469C17.4365 20.2484 16.4354 20.25 15 20.25H9C7.56459 20.25 6.56347 20.2484 5.80812 20.1469C5.07435 20.0482 4.68577 19.8678 4.40901 19.591C4.13225 19.3142 3.9518 18.9257 3.85315 18.1919C3.75159 17.4365 3.75 16.4354 3.75 15Z" fill="currentColor"/></svg></div>
+                    <div>
+                        <div class="source-btn-title">Upload Image</div>
+                        <div class="source-btn-desc">JPG, PNG, WEBP up to 16MB</div>
+                    </div>
+                    <i class="fas fa-arrow-right source-btn-arrow"></i>
+                </button>
+                <button class="source-btn" onclick="startCamera()">
+                    <div class="source-btn-icon"><svg viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" fill="none"><path fill="currentColor" d="M60 50v6a6 6 0 0 0 4.8-2.4L60 50Zm12-16v-6a6 6 0 0 0-4.8 2.4L72 34Zm60 16-4.8 3.6A6 6 0 0 0 132 56v-6Zm-12-16 4.8-3.6A6 6 0 0 0 120 28v6Zm44 32v76h12V66h-12Zm-10 86H38v12h116v-12ZM28 142V66H16v76h12Zm10-86h22V44H38v12Zm26.8-2.4 12-16-9.6-7.2-12 16 9.6 7.2ZM132 56h22V44h-22v12Zm4.8-9.6-12-16-9.6 7.2 12 16 9.6-7.2ZM120 28H72v12h48V28ZM38 152c-5.523 0-10-4.477-10-10H16c0 12.15 9.85 22 22 22v-12Zm126-10c0 5.523-4.477 10-10 10v12c12.15 0 22-9.85 22-22h-12Zm12-76c0-12.15-9.85-22-22-22v12c5.523 0 10 4.477 10 10h12ZM28 66c0-5.523 4.477-10 10-10V44c-12.15 0-22 9.85-22 22h12Z"/><circle cx="96" cy="102" r="28" stroke="currentColor" stroke-width="12"/></svg></div>
+                    <div>
+                        <div class="source-btn-title">Live Camera</div>
+                        <div class="source-btn-desc">Real-time detection</div>
+                    </div>
+                    <i class="fas fa-arrow-right source-btn-arrow"></i>
+                </button>
+            </div>
+            <input type="file" id="imageInput" accept="image/*">
+        </div>
+
+        <!-- Camera Section -->
+        <div class="card camera-section" id="cameraSection">
+            <div class="camera-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent);flex-shrink:0;" aria-hidden="true"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"></path><rect x="2" y="6" width="14" height="12" rx="2"></rect></svg>
+                <div class="camera-live-dot"></div>
+                <h2 class="card-heading" style="margin-bottom:0;">Camera Stream</h2>
+                <span class="camera-live-badge">Live</span>
+            </div>
+            <div class="camera-viewport">
+                <img id="cameraStream" src="" alt="Camera stream">
+                <div class="camera-corner tl"></div>
+                <div class="camera-corner tr"></div>
+                <div class="camera-corner bl"></div>
+                <div class="camera-corner br"></div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="captureFrame()"><svg viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" fill="none" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:6px;"><path fill="currentColor" d="M60 50v6a6 6 0 0 0 4.8-2.4L60 50Zm12-16v-6a6 6 0 0 0-4.8 2.4L72 34Zm60 16-4.8 3.6A6 6 0 0 0 132 56v-6Zm-12-16 4.8-3.6A6 6 0 0 0 120 28v6Zm44 32v76h12V66h-12Zm-10 86H38v12h116v-12ZM28 142V66H16v76h12Zm10-86h22V44H38v12Zm26.8-2.4 12-16-9.6-7.2-12 16 9.6 7.2ZM132 56h22V44h-22v12Zm4.8-9.6-12-16-9.6 7.2 12 16 9.6-7.2ZM120 28H72v12h48V28ZM38 152c-5.523 0-10-4.477-10-10H16c0 12.15 9.85 22 22 22v-12Zm126-10c0 5.523-4.477 10-10 10v12c12.15 0 22-9.85 22-22h-12Zm12-76c0-12.15-9.85-22-22-22v12c5.523 0 10 4.477 10 10h12ZM28 66c0-5.523 4.477-10 10-10V44c-12.15 0-22 9.85-22 22h12Z"></path><circle cx="96" cy="102" r="28" stroke="currentColor" stroke-width="12"></circle></svg>Capture Frame</button>
+                <button class="btn btn-destructive" onclick="stopCamera()"><i class="fas fa-stop"></i> Stop Camera</button>
+            </div>
+        </div>
+
+        <!-- Faces Section -->
+        <div class="card faces-section" id="facesSection">
+            <div class="faces-header">
+                <div>
+                    <h2 class="card-heading">Detected Faces</h2>
+                    <p class="card-sub" id="facesSubtext">0 faces found. Select faces to analyze.</p>
+                </div>
+                <span class="faces-count" id="facesSelectedCount">0 selected</span>
+            </div>
+            <div class="faces-grid" id="facesContainer"></div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="analyzeFaces()" id="analyzeBtn">
+                    <span><i class="fas fa-check"></i> Analyze Selected</span>
+                </button>
+                <button class="btn btn-outline" onclick="enableManualSelection()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px;" aria-hidden="true"><path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z"></path></svg>Manual Select
+                </button>
+                <button class="btn btn-enhance" onclick="openEnhanceModal()" id="enhanceBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px;" aria-hidden="true"><path d="M12 3v1"/><path d="M18.5 5.5l-.7.7"/><path d="M21 12h-1"/><path d="M18.5 18.5l-.7-.7"/><path d="M12 21v-1"/><path d="M5.5 18.5l.7-.7"/><path d="M3 12h1"/><path d="M5.5 5.5l.7.7"/><circle cx="12" cy="12" r="4"/></svg><span>Enhance Faces (<span id="enhanceCount">0</span>)</span>
+                </button>
+                <button class="btn btn-outline" onclick="revertEnhancement()" id="revertEnhanceBtn" style="display:none;">
+                    <svg width="18" height="18" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-right:6px;" aria-hidden="true"><path d="m 5 2 c -0.265625 0 -0.519531 0.105469 -0.707031 0.292969 l -4 4 c -0.3906252 0.390625 -0.3906252 1.023437 0 1.414062 l 4 4 c 0.390625 0.390625 1.023437 0.390625 1.414062 0 s 0.390625 -1.023437 0 -1.414062 l -2.292969 -2.292969 h 8.585938 c 1.117188 0 2 0.882812 2 2 s -0.882812 2 -2 2 c -0.550781 0 -1 0.449219 -1 1 s 0.449219 1 1 1 c 2.199219 0 4 -1.800781 4 -4 s -1.800781 -4 -4 -4 h -8.585938 l 2.292969 -2.292969 c 0.390625 -0.390625 0.390625 -1.023437 0 -1.414062 c -0.1875 -0.1875 -0.441406 -0.292969 -0.707031 -0.292969 z m 0 0"/></svg>Revert Enhancement
+                </button>
+            </div>
+        </div>
+
+        <!-- Manual Face Selection Section -->
+        <div class="card manual-section" id="manualSelectionSection">
+            <h2 class="card-heading">Manual Face Selection</h2>
+            <p class="card-sub" style="margin-bottom:8px;">Click and drag to draw rectangles around faces. You can select multiple faces.</p>
+            <div id="manualSelectionCount" style="font-size:13px;font-weight:500;color:var(--accent);margin-bottom:12px;">Selected faces: 0</div>
+            <div class="manual-canvas-wrap">
+                <canvas id="manualSelectionCanvas"></canvas>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="addToDetectedFaces()" id="analyzeManualButton" disabled>
+                    <i class="fas fa-plus"></i> Add to Detected Faces
+                </button>
+                <button class="btn btn-warning" onclick="clearLastSelection()"><i class="fas fa-undo"></i> Undo Last</button>
+                <button class="btn btn-muted" onclick="clearAllSelections()"><i class="fas fa-eraser"></i> Clear All</button>
+                <button class="btn btn-destructive" onclick="cancelManualSelection()"><i class="fas fa-times"></i> Cancel</button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection">
+
+            <!-- Results header card -->
+            <div class="card" style="padding:20px 24px;">
+                <div class="results-header-card">
+                    <div>
+                        <h2 class="card-heading" style="font-size:20px;font-weight:700;">Analysis Results</h2>
+                        <p class="card-sub">Detailed emotion breakdown for each detected face region</p>
+                    </div>
+                    <span class="results-count-badge" id="resultsCountBadge">0 faces</span>
+                </div>
+            </div>
+
+            <!-- Custom name -->
+            <div class="card custom-name-card" id="customNameContainer" style="padding:16px 20px;">
+                <div class="custom-name-label"><i class="fas fa-tag"></i> Entry Name</div>
+                <input type="text" class="custom-name-input" id="customNameInput" placeholder="Enter custom name (optional)">
+            </div>
+
+            <!-- Results grid -->
+            <div class="results-grid" id="resultsContainer"></div>
+
+            <!-- Analyzed Image -->
+            <div class="card analyzed-image-card" id="finalImageContainer" style="display:none;"></div>
+
+            <!-- Action buttons -->
+            <div class="card actions-card" id="actionButtonsContainer">
+                <div class="btn-group">
+                    <button class="btn btn-outline" onclick="reanalyzeEmotions()" id="reanalyzeButton">
+                        <i class="fas fa-sync-alt"></i> Reanalyze
+                    </button>
+                    <button class="btn btn-primary" onclick="submitToDatabase()" id="submitButton" title="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px;" aria-hidden="true"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"></path><path d="M7 3v4a1 1 0 0 0 1 1h7"></path></svg> Submit to Database
+                    </button>
+                    <button class="btn btn-outline" onclick="closeResults()" id="closeResultsButton">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px;" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Close
+                    </button>
+                    <button class="btn btn-outline" onclick="openDownloadModal()" id="downloadArchiveBtn" style="display:none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px;" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Save
+                    </button>
+                    <button class="btn btn-destructive" onclick="deleteCurrentArchiveEntry()" id="deleteCurrentButton" style="display:none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Delete Entry
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /content-area -->
+
+    <div style="position:absolute;bottom:0px;padding:24px 32px 16px;font-size:11px;color:var(--text-muted);">
+        The website has been created for the purpose of HackEmotion 2024
+    </div>
+</div><!-- /main-content -->
+
+<!-- ====================================================================
+     MODALS
+     ==================================================================== -->
+<!-- Loading -->
+<div class="modal-overlay" id="loadingModal" role="dialog" aria-modal="true">
+    <div class="loading-content">
+        <div class="loading-spinner-wrap">
+            <div class="loading-ping"></div>
+            <div class="loading-spinner"></div>
+        </div>
+        <div style="text-align:center;">
+            <div class="loading-text" id="loadingText">Processing image...</div>
+            <div class="loading-sub">This may take a moment</div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Emotions -->
+<div class="modal-overlay" id="editModal" role="dialog" aria-modal="true">
+    <div class="edit-content">
+        <h3 class="edit-title">Edit Emotions - Face <span id="editingFaceId"></span></h3>
+        <div id="emotionInputs"></div>
+        <div class="edit-total" id="totalEmotions"></div>
+        <div class="edit-actions">
+            <button class="btn btn-outline" onclick="closeEditModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveEmotions()"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px;" aria-hidden="true"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"></path><path d="M7 3v4a1 1 0 0 0 1 1h7"></path></svg> Save Changes</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Download Modal -->
+<div class="modal-overlay" id="downloadModal" role="dialog" aria-modal="true">
+    <div class="enhance-content" style="max-width:360px;">
+        <h3 class="enhance-title">Save Image</h3>
+        <p style="color:var(--text-muted);font-size:13px;margin-bottom:16px;">Choose which image(s) to download:</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+            <button class="btn btn-primary" onclick="downloadArchiveImage('analyzed')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Analyzed image
+            </button>
+            <button class="btn btn-outline" onclick="downloadArchiveImage('original')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Original image
+            </button>
+        </div>
+        <div style="margin-top:16px;text-align:right;">
+            <button class="btn btn-outline" onclick="closeDownloadModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Auth Modal -->
+<div class="modal-overlay" id="authModal" role="dialog" aria-modal="true">
+    <div class="auth-content">
+
+        <!-- VIEW: Login -->
+        <div id="authViewLogin">
+            <div class="auth-title">Welcome back</div>
+            <div class="auth-subtitle">Sign in to your account</div>
+            <div class="auth-error" id="loginError"></div>
+            <form autocomplete="on" onsubmit="submitLogin();return false;">
+            <div class="auth-field">
+                <label>Email</label>
+                <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="username">
+            </div>
+            <div class="auth-field">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+            </div>
+            <div class="auth-actions">
+                <button type="submit" class="btn btn-primary">Sign In</button>
+                <button type="button" class="btn btn-outline" onclick="closeAuthModal()">Cancel</button>
+            </div>
+            </form>
+            <div class="auth-switch">Don't have an account? <a onclick="showAuthView('register')">Register</a></div>
+            <div class="auth-switch"><a onclick="showAuthView('forgotPw')">Forgot your password?</a></div>
+        </div>
+
+        <!-- VIEW: Forgot Password -->
+        <div id="authViewForgotPw" style="display:none;">
+            <div class="auth-title">Reset password</div>
+            <div class="auth-subtitle">Enter your email and we'll send you a reset link</div>
+            <div class="auth-error" id="forgotPwError"></div>
+            <div class="auth-success" id="forgotPwSuccess"></div>
+            <form autocomplete="off" onsubmit="submitForgotPassword();return false;">
+            <div class="auth-field">
+                <label>Email</label>
+                <input type="email" id="forgotPwEmail" placeholder="you@example.com" autocomplete="username">
+            </div>
+            <div class="auth-actions">
+                <button type="submit" class="btn btn-primary">Send Reset Link</button>
+                <button type="button" class="btn btn-outline" onclick="showAuthView('login')">Back</button>
+            </div>
+            </form>
+        </div>
+
+        <!-- VIEW: Reset Password (via link) -->
+        <div id="authViewResetPw" style="display:none;">
+            <div class="auth-title">Set new password</div>
+            <div class="auth-subtitle">Enter your new password below</div>
+            <div class="auth-error" id="resetPwError"></div>
+            <div class="auth-success" id="resetPwSuccess"></div>
+            <form autocomplete="off" onsubmit="submitResetPassword();return false;">
+            <div class="auth-field">
+                <label>New Password</label>
+                <input type="password" id="resetPwPassword" placeholder="Min. 8 characters" autocomplete="new-password" oninput="checkPwRequirements(this.value,'resetPwReqs')">
+                <ul class="pw-requirements" id="resetPwReqs">
+                    <li id="resetPwLen">At least 8 characters</li>
+                    <li id="resetPwUpper">At least one uppercase letter</li>
+                    <li id="resetPwDigit">At least one digit</li>
+                    <li id="resetPwSpecial">At least one special character (!@#$%^&* etc.)</li>
+                </ul>
+            </div>
+            <div class="auth-field">
+                <label>Confirm Password</label>
+                <input type="password" id="resetPwPassword2" placeholder="Repeat password" autocomplete="new-password">
+            </div>
+            <div class="auth-actions">
+                <button type="submit" class="btn btn-primary">Set New Password</button>
+            </div>
+            </form>
+        </div>
+
+        <!-- VIEW: 2FA -->
+        <div id="authView2fa" style="display:none;">
+            <div class="auth-title">Check your email</div>
+            <div class="auth-subtitle">We sent a 6-digit code to <strong id="twofa_email_label"></strong></div>
+            <div class="auth-error" id="twofaError"></div>
+            <div class="auth-success" id="twofaSuccess"></div>
+            <div class="auth-field">
+                <label>Verification Code</label>
+                <input type="text" id="twofaCode" class="auth-code-input" placeholder="000000" maxlength="6" inputmode="numeric">
+            </div>
+            <div class="auth-timer">Code expires in <span id="twofaTimer">10:00</span></div>
+            <div class="auth-actions">
+                <button class="btn btn-primary" onclick="submit2fa()">Verify</button>
+                <button class="btn btn-outline" onclick="resend2fa()">Resend Code</button>
+                <button class="btn btn-outline" onclick="showAuthView('login')">Back</button>
+            </div>
+        </div>
+
+        <!-- VIEW: Register -->
+        <div id="authViewRegister" style="display:none;">
+            <div class="auth-title">Create account</div>
+            <div class="auth-subtitle">Enter your details to register</div>
+            <div class="auth-error" id="registerError"></div>
+            <div class="auth-success" id="registerSuccess"></div>
+            <form autocomplete="on" onsubmit="submitRegister();return false;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:12px;">
+                <div id="registerAvatarPreview" class="auth-avatar-big" style="cursor:pointer;font-size:13px;color:var(--text-muted);" onclick="document.getElementById('registerAvatarInput').click()">+<br>Photo</div>
+                <input type="file" id="registerAvatarInput" accept="image/*" style="display:none;" onchange="previewRegisterAvatar(this)">
+                <span style="font-size:11px;color:var(--text-muted);">Profile photo (optional)</span>
+            </div>
+            <div class="auth-field">
+                <label>Username <span style="color:var(--danger)">*</span></label>
+                <input type="text" id="registerUsername" placeholder="Your display name" autocomplete="name">
+            </div>
+            <div class="auth-field">
+                <label>Email</label>
+                <input type="email" id="registerEmail" placeholder="you@example.com" autocomplete="username">
+            </div>
+            <div class="auth-field">
+                <label>Password</label>
+                <input type="password" id="registerPassword" placeholder="Min. 8 characters" autocomplete="new-password" oninput="checkPwRequirements(this.value,'regPwReqs')">
+                <ul class="pw-requirements" id="regPwReqs">
+                    <li id="regPwLen">At least 8 characters</li>
+                    <li id="regPwUpper">At least one uppercase letter</li>
+                    <li id="regPwDigit">At least one digit</li>
+                    <li id="regPwSpecial">At least one special character (!@#$%^&* etc.)</li>
+                </ul>
+            </div>
+            <div class="auth-field">
+                <label>Confirm Password</label>
+                <input type="password" id="registerPassword2" placeholder="Repeat password" autocomplete="new-password">
+            </div>
+            <div class="auth-actions">
+                <button type="submit" class="btn btn-primary">Create Account</button>
+                <button type="button" class="btn btn-outline" onclick="closeAuthModal()">Cancel</button>
+            </div>
+            </form>
+            <div class="auth-switch">Already have an account? <a onclick="showAuthView('login')">Sign In</a></div>
+        </div>
+
+        <!-- VIEW: Verify Registration -->
+        <div id="authViewVerifyReg" style="display:none;">
+            <div class="auth-title">Verify your email</div>
+            <div class="auth-subtitle">We sent a 6-digit code to <strong id="verifyReg_email_label"></strong></div>
+            <div class="auth-error" id="verifyRegError"></div>
+            <div class="auth-success" id="verifyRegSuccess"></div>
+            <div class="auth-field">
+                <label>Verification Code</label>
+                <input type="text" id="verifyRegCode" class="auth-code-input" placeholder="000000" maxlength="6" inputmode="numeric">
+            </div>
+            <div class="auth-timer">Code expires in <span id="verifyRegTimer">15:00</span></div>
+            <div class="auth-actions">
+                <button class="btn btn-primary" onclick="submitVerifyRegistration()">Verify Email</button>
+                <button class="btn btn-outline" onclick="resendRegistrationCode()">Resend Code</button>
+                <button class="btn btn-outline" onclick="showAuthView('register')">Back</button>
+            </div>
+        </div>
+
+        <!-- VIEW: Logged in / Profile -->
+        <div id="authViewLoggedIn" style="display:none;">
+            <div class="auth-title">Profile</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:12px;">
+                <div id="authAvatarBig" class="auth-avatar-big" style="cursor:pointer;" onclick="document.getElementById('profileAvatarInput').click()">?</div>
+                <input type="file" id="profileAvatarInput" accept="image/*" style="display:none;" onchange="previewProfileAvatar(this)">
+                <span style="font-size:11px;color:var(--text-muted);">Click photo to change</span>
+            </div>
+            <div class="auth-error" id="profileError"></div>
+            <div class="auth-success" id="profileSuccess"></div>
+            <div class="auth-field">
+                <label>Email</label>
+                <input type="email" id="authLoggedEmail" autocomplete="off" readonly
+                    style="background:var(--bg-tertiary);color:var(--text-muted);cursor:default;">
+            </div>
+            <div class="auth-field">
+                <label>Username</label>
+                <input type="text" id="profileUsername" placeholder="Display name" autocomplete="name">
+            </div>
+            <details style="margin-bottom:8px;">
+                <summary style="cursor:pointer;font-size:13px;color:var(--text-muted);user-select:none;">Change password</summary>
+                <div style="margin-top:8px;display:flex;flex-direction:column;gap:8px;">
+                    <div class="auth-field" style="margin-bottom:0;">
+                        <label>Current Password</label>
+                        <input type="password" id="profileCurrentPw" placeholder="Current password">
+                    </div>
+                    <div class="auth-field" style="margin-bottom:0;">
+                        <label>New Password</label>
+                        <input type="password" id="profileNewPw" placeholder="Min. 8 characters" oninput="checkPwRequirements(this.value,'profilePwReqs')">
+                        <ul class="pw-requirements" id="profilePwReqs">
+                            <li id="profilePwLen">At least 8 characters</li>
+                            <li id="profilePwUpper">At least one uppercase letter</li>
+                            <li id="profilePwDigit">At least one digit</li>
+                            <li id="profilePwSpecial">At least one special character (!@#$%^&* etc.)</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+            <div class="auth-actions">
+                <button class="btn btn-primary" onclick="submitUpdateProfile()">Save Changes</button>
+                <button class="btn btn-outline" onclick="submitLogout()">Sign Out</button>
+                <button class="btn btn-outline" onclick="closeAuthModal()">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Enhance Faces Modal -->
+<div class="modal-overlay" id="enhanceModal" role="dialog" aria-modal="true">
+    <div class="enhance-content">
+        <h3 class="enhance-title">Enhance Detected Faces</h3>
+        <div class="enhance-models">
+            <div class="enhance-model-card selected" id="modelCardGfpgan" onclick="selectEnhanceModel('gfpgan')">
+                <div class="enhance-model-header">
+                    <div class="enhance-model-radio"></div>
+                    <span class="enhance-model-name">GFPGAN v1.4</span>
+                    <span class="enhance-model-tag">Recommended</span>
+                </div>
+                <p class="enhance-model-desc">
+                    Generative model wytrenowany specjalnie na twarzach. Przywraca szczegóły skóry, oczu i włosów nawet z mocno rozmazanych lub niskorozdzielczościowych kadrów.
+                </p>
+                <div class="enhance-model-stats">
+                    <div class="enhance-stat">
+                        <span class="enhance-stat-label">Specjalizacja</span>
+                        <span class="enhance-stat-value">Tylko twarze</span>
+                    </div>
+                    <div class="enhance-stat">
+                        <span class="enhance-stat-label">Upscale</span>
+                        <span class="enhance-stat-value">2×</span>
+                    </div>
+                    <div class="enhance-stat">
+                        <span class="enhance-stat-label">Model</span>
+                        <span class="enhance-stat-value">~330 MB</span>
+                    </div>
+                    <div class="enhance-stat">
+                        <span class="enhance-stat-label">Szybkość</span>
+                        <span class="enhance-stat-value">Wolniejsza</span>
+                    </div>
+                </div>
+            </div>
+            <div class="enhance-model-card" id="modelCardRealesrgan" onclick="selectEnhanceModel('realesrgan')">
+                <div class="enhance-model-header">
+                    <div class="enhance-model-radio"></div>
+                    <span class="enhance-model-name">Real-ESRGAN x4+</span>
+                </div>
+                <p class="enhance-model-desc">
+                    Ogólny model super-resolution. Działa na całym kadrze twarzy bez rozpoznawania punktów twarzy — szybszy i lżejszy, dobry gdy GFPGAN nie wykrywa twarzy prawidłowo.
+                </p>
+                <div class="enhance-model-stats">
+                    <div class="enhance-stat">
+                        <span class="enhance-stat-label">Specjalizacja</span>
+                        <span class="enhance-stat-value">Ogólne</span>
+                    </div>
+                    <div class="enhance-stat">
+                        <span class="enhance-stat-label">Upscale</span>
+                        <span class="enhance-stat-value">2×</span>
+                    </div>
+                    <div class="enhance-stat">
+                        <span class="enhance-stat-label">Model</span>
+                        <span class="enhance-stat-value">~65 MB</span>
+                    </div>
+                    <div class="enhance-stat">
+                        <span class="enhance-stat-label">Szybkość</span>
+                        <span class="enhance-stat-value">Szybsza</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="enhance-actions">
+            <button class="btn btn-outline" onclick="closeEnhanceModal()">Anuluj</button>
+            <button class="btn btn-enhance" onclick="runEnhancement()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px;" aria-hidden="true"><path d="M12 3v1"/><path d="M18.5 5.5l-.7.7"/><path d="M21 12h-1"/><path d="M18.5 18.5l-.7-.7"/><path d="M12 21v-1"/><path d="M5.5 18.5l.7-.7"/><path d="M3 12h1"/><path d="M5.5 5.5l.7.7"/><circle cx="12" cy="12" r="4"/></svg>Enhance
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ====================================================================
+     JAVASCRIPT
+     ==================================================================== -->
+<script>
+/* ========================================================================
+   STATE
+   ======================================================================== */
+let currentTheme = 'neural';
+let currentImagePath = '';
+let detectedFaces = [];
+let selectedFaces = new Set();
+let originalFaceCrops = {}; // face id -> original cropped_face url before enhancement
+let analysisResults = null;
+let currentEditingFace = null;
+let isViewingArchiveEntry = false;
+let currentArchiveImagePath = null;
+let currentArchiveCustomName = '';
+let allArchiveEntries = [];
+
+// Manual selection
+let isDrawing = false;
+let startX, startY, endX, endY;
+let manualSelectionRects = [];
+let canvas, ctx;
+let baseImage = null;
+
+// Neural bg
+let neuralAnimId = null;
+
+/* ========================================================================
+   THEME SYSTEM
+   ======================================================================== */
+function setTheme(theme) {
+    currentTheme = theme;
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('fer-theme', theme);
+
+    // Update switcher buttons
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.theme === theme);
+    });
+
+    // Update backgrounds
+    updateBackground();
+}
+
+function updateBackground() {
+    const neuralCanvas = document.getElementById('neuralCanvas');
+    const glassBg = document.getElementById('glassBg');
+    const minimalBg = document.getElementById('minimalBg');
+
+    neuralCanvas.style.display = 'none';
+    glassBg.style.display = 'none';
+    minimalBg.style.display = 'none';
+
+    if (neuralAnimId) { cancelAnimationFrame(neuralAnimId); neuralAnimId = null; }
+
+    if (currentTheme === 'neural') {
+        neuralCanvas.style.display = 'block';
+        initNeuralBg();
+    } else if (currentTheme === 'glass') {
+        glassBg.style.display = 'block';
+    } else {
+        minimalBg.style.display = 'block';
+    }
+}
+
+/* ========================================================================
+   NEURAL NETWORK BACKGROUND
+   ======================================================================== */
+function initNeuralBg() {
+    const canvas = document.getElementById('neuralCanvas');
+    const ctx = canvas.getContext('2d');
+    const nodes = [];
+    const nodeCount = 60;
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    for (let i = 0; i < nodeCount; i++) {
+        nodes.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: (Math.random() - 0.5) * 0.4,
+            radius: Math.random() * 2 + 1,
+        });
+    }
+
+    // Determine color based on theme
+    const isNeural = currentTheme === 'neural';
+    const r = isNeural ? 88 : 93;
+    const g = isNeural ? 166 : 228;
+    const b = isNeural ? 255 : 199;
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < nodes.length; i++) {
+            const node = nodes[i];
+            node.x += node.vx;
+            node.y += node.vy;
+            if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
+            if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
+
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.5)`;
+            ctx.fill();
+
+            for (let j = i + 1; j < nodes.length; j++) {
+                const other = nodes[j];
+                const dx = node.x - other.x;
+                const dy = node.y - other.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 180) {
+                    ctx.beginPath();
+                    ctx.moveTo(node.x, node.y);
+                    ctx.lineTo(other.x, other.y);
+                    ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${0.12 * (1 - dist / 180)})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        neuralAnimId = requestAnimationFrame(draw);
+    }
+    draw();
+}
+
+/* ========================================================================
+   SIDEBAR
+   ======================================================================== */
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const main = document.getElementById('mainContent');
+    const icon = document.querySelector('#sidebarToggle i');
+
+    sidebar.classList.toggle('collapsed');
+    main.classList.toggle('expanded');
+    icon.classList.toggle('fa-chevron-left');
+    icon.classList.toggle('fa-chevron-right');
+}
+
+function expandSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('collapsed')) toggleSidebar();
+}
+
+function expandAndFocusSearch() {
+    expandSidebar();
+    setTimeout(() => document.getElementById('searchInput').focus(), 350);
+}
+
+function expandAndScrollToCurrent() {
+    expandSidebar();
+    setTimeout(() => {
+        if (!currentArchiveImagePath) return;
+        const item = document.querySelector(`.archive-item[data-path="${CSS.escape(currentArchiveImagePath)}"]`);
+        if (!item) return;
+        item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        item.classList.remove('highlight-flash');
+        void item.offsetWidth; // reflow to restart animation
+        item.classList.add('highlight-flash');
+        item.addEventListener('animationend', () => item.classList.remove('highlight-flash'), { once: true });
+    }, 350);
+}
+
+function toggleProfileOptions() {
+    // No-op for now
+}
+
+/* ========================================================================
+   ARCHIVE
+   ======================================================================== */
+function clearFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('filterDateFrom').value = '';
+    document.getElementById('filterDateTo').value = '';
+    document.getElementById('clearFiltersBtn').style.display = 'none';
+    filterArchiveItems();
+}
+
+function filterArchiveItems() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const dateFrom = document.getElementById('filterDateFrom').value;
+    const dateTo = document.getElementById('filterDateTo').value;
+
+    // Show/hide clear filters button
+    const clearBtn = document.getElementById('clearFiltersBtn');
+    clearBtn.style.display = (searchTerm || dateFrom || dateTo) ? 'block' : 'none';
+
+    const archiveList = document.getElementById('archiveList');
+    archiveList.innerHTML = '';
+
+    const filtered = allArchiveEntries.filter(entry => {
+        const date = new Date(entry.timestamp * 1000);
+        const dateStr = date.toISOString().split('T')[0];
+
+        const imagePath = entry.image_path;
+        const filename = imagePath.split('/').pop();
+        let originalFilename = filename;
+        if (originalFilename.startsWith('analyzed_')) originalFilename = originalFilename.replace('analyzed_', '');
+        originalFilename = originalFilename.replace(/_\d{13}(\.\w+)$/, '$1');
+
+        const d = date;
+        const dateStrDisplay = `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}-${String(d.getHours()).padStart(2,'0')}-${String(d.getMinutes()).padStart(2,'0')}-${String(d.getSeconds()).padStart(2,'0')}-${originalFilename}`;
+        const displayName = entry.custom_name || dateStrDisplay;
+
+        if (searchTerm && !displayName.toLowerCase().includes(searchTerm)) return false;
+        if (dateFrom && dateStr < dateFrom) return false;
+        if (dateTo && dateStr > dateTo) return false;
+        return true;
+    });
+
+    document.getElementById('archiveTitle').textContent = `Archive (${filtered.length})`;
+
+    if (filtered.length === 0) {
+        archiveList.innerHTML = '<div class="archive-empty"><i class="fas fa-image"></i><p>No entries found</p></div>';
+        return;
+    }
+
+    filtered.forEach(entry => createArchiveItem(entry));
+    updateStats();
+}
+
+function createArchiveItem(entry) {
+    const item = document.createElement('div');
+    item.className = 'archive-item';
+    item.dataset.path = entry.image_path;
+
+    const facesCount = Object.keys(entry.faces).length;
+    const date = new Date(entry.timestamp * 1000);
+    const imagePath = entry.image_path;
+    const filename = imagePath.split('/').pop();
+    let originalFilename = filename;
+    if (originalFilename.startsWith('analyzed_')) originalFilename = originalFilename.replace('analyzed_', '');
+    originalFilename = originalFilename.replace(/_\d{13}(\.\w+)$/, '$1');
+
+    const d = date;
+    const dateStr = `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}-${String(d.getHours()).padStart(2,'0')}-${String(d.getMinutes()).padStart(2,'0')}-${String(d.getSeconds()).padStart(2,'0')}-${originalFilename}`;
+    const displayName = entry.custom_name || dateStr;
+
+    item.innerHTML = `
+        <div class="archive-item-content" title="${displayName}">
+            <div class="archive-item-name">${displayName}</div>
+            <div class="archive-item-meta">
+                <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><path d="M16 3.128a4 4 0 0 1 0 7.744"></path><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="9" cy="7" r="4"></circle></svg> ${facesCount}</span>
+                <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6v6l4 2"></path><circle cx="12" cy="12" r="10"></circle></svg> ${d.toLocaleDateString()}</span>
+            </div>
+        </div>
+        <button class="archive-item-delete" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+    `;
+
+    item.querySelector('.archive-item-content').onclick = () => loadArchiveFromSidebar(entry.image_path, entry.faces, entry.custom_name || '');
+    item.querySelector('.archive-item-delete').onclick = (e) => { e.stopPropagation(); deleteArchiveEntry(entry.image_path); };
+
+    document.getElementById('archiveList').appendChild(item);
+}
+
+async function loadSidebarArchive() {
+    try {
+        const response = await fetch('/get_archive', {
+            headers: _authToken ? {'Authorization': `Bearer ${_authToken}`} : {}
+        });
+        const data = await response.json();
+        if (data.success) {
+            allArchiveEntries = data.archive.length > 0 ? [...data.archive].reverse() : [];
+            filterArchiveItems();
+        }
+    } catch (error) {
+        console.error('Error loading archive:', error);
+    }
+}
+
+function updateStats() {
+    document.getElementById('statTotal').textContent = allArchiveEntries.length;
+    let totalFaces = 0;
+    allArchiveEntries.forEach(e => { totalFaces += Object.keys(e.faces).length; });
+    document.getElementById('statFaces').textContent = totalFaces;
+}
+
+async function deleteArchiveEntry(imagePath) {
+    if (!confirm('Are you sure you want to delete this archive entry?')) return;
+    try {
+        const response = await fetch('/delete_archive_entry', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image_path: imagePath })
+        });
+        const data = await response.json();
+        if (data.error) { alert('Error: ' + data.error); return; }
+        await loadSidebarArchive();
+        if (currentArchiveImagePath && currentArchiveImagePath === imagePath) {
+            hideAllSections();
+            showSection('sourceSection');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while deleting');
+    }
+}
+
+async function loadArchiveFromSidebar(imagePath, facesEmotions, customName = '') {
+    showLoading('Loading archive entry...');
+    try {
+        const response = await fetch('/load_archive_image', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image_path: imagePath, emotions: facesEmotions })
+        });
+        const data = await response.json();
+        if (data.error) { alert(data.error); return; }
+        hideAllSections();
+        displayArchivedResults(data.analyzed_image, data.emotions, customName);
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while loading');
+    } finally {
+        hideLoading();
+    }
+}
+
+/* ========================================================================
+   SECTION MANAGEMENT
+   ======================================================================== */
+function hideAllSections() {
+    ['cameraSection','facesSection','manualSelectionSection','resultsSection'].forEach(id => {
+        const el = document.getElementById(id);
+        el.classList.remove('visible');
+        if (el.classList.contains('card')) el.style.display = 'none';
+    });
+}
+
+function showSection(id) {
+    const el = document.getElementById(id);
+    el.style.display = '';
+    el.classList.add('visible');
+}
+
+function scrollToSection(id) {
+    requestAnimationFrame(() => {
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+}
+
+/* ========================================================================
+   LOADING MODAL
+   ======================================================================== */
+function showLoading(msg) {
+    document.getElementById('loadingText').textContent = msg || 'Processing image...';
+    document.getElementById('loadingModal').classList.add('visible');
+}
+function hideLoading() {
+    document.getElementById('loadingModal').classList.remove('visible');
+}
+
+/* ========================================================================
+   IMAGE UPLOAD
+   ======================================================================== */
+document.getElementById('imageInput').addEventListener('change', handleImageUpload);
+
+async function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    selectedFaces.clear();
+    originalFaceCrops = {};
+    analysisResults = null;
+    hideAllSections();
+    showLoading('Detecting faces...');
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+        const response = await fetch('/upload_image', { method: 'POST', body: formData });
+        const data = await response.json();
+        if (data.error) { alert(data.error); return; }
+        currentImagePath = data.filepath;
+        detectedFaces = data.faces;
+        displayFaces(data.faces);
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred during upload');
+    } finally {
+        hideLoading();
+        // Reset file input
+        event.target.value = '';
+    }
+}
+
+/* ========================================================================
+   CAMERA
+   ======================================================================== */
+async function startCamera() {
+    try {
+        const response = await fetch('/start_camera', { method: 'POST' });
+        const data = await response.json();
+        if (data.success) {
+            hideAllSections();
+            showSection('cameraSection');
+            scrollToSection('cameraSection');
+            document.getElementById('cameraStream').src = '/camera_stream?' + Date.now();
+        }
+    } catch (error) {
+        console.error('Error starting camera:', error);
+        alert('Failed to start camera');
+    }
+}
+
+async function stopCamera() {
+    try {
+        await fetch('/stop_camera', { method: 'POST' });
+        document.getElementById('cameraStream').src = '';
+        hideAllSections();
+        showSection('sourceSection');
+    } catch (error) { console.error('Error:', error); }
+}
+
+async function captureFrame() {
+    selectedFaces.clear();
+    originalFaceCrops = {};
+    analysisResults = null;
+    showLoading('Capturing frame...');
+    try {
+        const response = await fetch('/capture_frame', { method: 'POST' });
+        const data = await response.json();
+        if (data.error) { alert(data.error); return; }
+        await stopCamera();
+        currentImagePath = data.filepath;
+        detectedFaces = data.faces;
+        displayFaces(data.faces);
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to capture frame');
+    } finally { hideLoading(); }
+}
+
+/* ========================================================================
+   FACES DISPLAY
+   ======================================================================== */
+function displayFaces(faces) {
+    const container = document.getElementById('facesContainer');
+    container.innerHTML = '';
+    selectedFaces.clear();
+    originalFaceCrops = {};
+    document.getElementById('revertEnhanceBtn').style.display = 'none';
+
+    document.getElementById('facesSubtext').textContent = `${faces.length} face${faces.length !== 1 ? 's' : ''} found. Select faces to analyze.`;
+
+    faces.forEach(face => {
+        const card = document.createElement('div');
+        card.className = 'face-card';
+        card.dataset.id = face.id;
+
+        const hasCrop = face.cropped_face && face.cropped_face.length > 0;
+
+        card.innerHTML = `
+            ${hasCrop ? `<img src="${face.cropped_face}" alt="Face ${face.id}">` : ''}
+            <div class="face-card-placeholder" ${hasCrop ? 'style="display:none;"' : ''}>
+                <div class="face-card-num">${face.id}</div>
+                <div class="face-card-label">Face ${face.id}</div>
+            </div>
+            <div class="face-check"><i class="fas fa-check"></i></div>
+            <div class="face-card-bottom"><span>Face ${face.id}</span></div>
+        `;
+
+        card.onclick = () => toggleFaceSelection(face.id, card);
+        container.appendChild(card);
+    });
+
+    hideAllSections();
+    showSection('facesSection');
+    scrollToSection('facesSection');
+    updateFaceSelectionUI();
+}
+
+function toggleFaceSelection(faceId, element) {
+    if (selectedFaces.has(faceId)) {
+        selectedFaces.delete(faceId);
+        element.classList.remove('selected');
+    } else {
+        selectedFaces.add(faceId);
+        element.classList.add('selected');
+    }
+    updateFaceSelectionUI();
+}
+
+function updateFaceSelectionUI() {
+    const analyzeCount = document.getElementById('analyzeCount');
+    const enhanceCount = document.getElementById('enhanceCount');
+    const facesSelectedCount = document.getElementById('facesSelectedCount');
+    if (facesSelectedCount) facesSelectedCount.textContent = selectedFaces.size + ' selected';
+    if (analyzeCount) analyzeCount.textContent = selectedFaces.size;
+    if (enhanceCount) enhanceCount.textContent = selectedFaces.size;
+    document.getElementById('analyzeBtn').disabled = selectedFaces.size === 0;
+    document.getElementById('enhanceBtn').disabled = selectedFaces.size === 0;
+}
+
+/* ========================================================================
+   ENHANCE FACES
+   ======================================================================== */
+let selectedEnhanceModel = 'gfpgan';
+
+function openDownloadModal() {
+    document.getElementById('downloadModal').classList.add('visible');
+}
+
+function closeDownloadModal() {
+    document.getElementById('downloadModal').classList.remove('visible');
+}
+
+function downloadArchiveImage(which) {
+    // Derive original filename from analyzed path: analyzed_{base}_{timestamp}.{ext} -> {base}.{ext}
+    const analyzedPath = currentArchiveImagePath; // e.g. /uploads/analyzed_photo_14302547.jpg
+    const filename = analyzedPath.split('/').pop();
+    const originalFilename = filename.replace(/^analyzed_(.+)_(\d{8}|\d{13})(\.\w+)$/, '$1$3');
+    const originalPath = '/uploads/' + originalFilename;
+
+    function triggerDownload(url, name) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    if (which === 'analyzed' || which === 'both') triggerDownload(analyzedPath, filename);
+    if (which === 'original' || which === 'both') triggerDownload(originalPath, originalFilename);
+    closeDownloadModal();
+}
+
+function openEnhanceModal() {
+    if (detectedFaces.length === 0) { alert('No faces detected.'); return; }
+    document.getElementById('enhanceModal').classList.add('visible');
+}
+
+function closeEnhanceModal() {
+    document.getElementById('enhanceModal').classList.remove('visible');
+}
+
+function selectEnhanceModel(model) {
+    selectedEnhanceModel = model;
+    document.getElementById('modelCardGfpgan').classList.toggle('selected', model === 'gfpgan');
+    document.getElementById('modelCardRealesrgan').classList.toggle('selected', model === 'realesrgan');
+}
+
+async function runEnhancement() {
+    closeEnhanceModal();
+    showLoading('Enhancing faces with ' + (selectedEnhanceModel === 'gfpgan' ? 'GFPGAN' : 'Real-ESRGAN') + '...');
+    try {
+        const facesToEnhance = detectedFaces.filter(f => selectedFaces.has(f.id));
+        // Save original crops before enhancement
+        facesToEnhance.forEach(f => {
+            if (!(f.id in originalFaceCrops)) originalFaceCrops[f.id] = f.cropped_face;
+        });
+
+        const response = await fetch('/enhance_faces', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                filepath: currentImagePath,
+                faces: facesToEnhance,
+                model: selectedEnhanceModel
+            })
+        });
+        const data = await response.json();
+        hideLoading();
+        if (!data.success) { alert('Enhancement error: ' + (data.error || 'Unknown error')); return; }
+
+        // Update face card images with enhanced crops
+        data.enhanced_faces.forEach(ef => {
+            const card = document.querySelector(`.face-card[data-id="${ef.id}"]`);
+            if (!card) return;
+            let img = card.querySelector('img');
+            const placeholder = card.querySelector('.face-card-placeholder');
+            if (!img) {
+                img = document.createElement('img');
+                img.alt = `Face ${ef.id}`;
+                card.insertBefore(img, card.firstChild);
+                if (placeholder) placeholder.style.display = 'none';
+            }
+            img.src = ef.enhanced_crop + '?t=' + Date.now();
+            // Update detectedFaces so re-analysis uses enhanced crop
+            const face = detectedFaces.find(f => f.id === ef.id);
+            if (face) {
+                face.cropped_face = ef.enhanced_crop;
+                face.enhanced_crop = ef.enhanced_crop;
+            }
+        });
+
+        document.getElementById('revertEnhanceBtn').style.display = '';
+    } catch (err) {
+        hideLoading();
+        alert('Enhancement failed: ' + err.message);
+    }
+}
+
+function revertEnhancement() {
+    Object.entries(originalFaceCrops).forEach(([idStr, originalSrc]) => {
+        const id = parseInt(idStr);
+        const card = document.querySelector(`.face-card[data-id="${id}"]`);
+        if (card) {
+            const placeholder = card.querySelector('.face-card-placeholder');
+            let img = card.querySelector('img');
+            if (originalSrc) {
+                // Restore or create img with original src
+                if (!img) {
+                    img = document.createElement('img');
+                    img.alt = `Face ${id}`;
+                    card.insertBefore(img, card.firstChild);
+                }
+                img.onerror = () => {
+                    img.remove();
+                    if (placeholder) placeholder.style.display = '';
+                };
+                img.src = originalSrc;
+                if (placeholder) placeholder.style.display = 'none';
+            } else {
+                // No original crop - remove added img and show placeholder
+                if (img) img.remove();
+                if (placeholder) placeholder.style.display = '';
+            }
+        }
+        const face = detectedFaces.find(f => f.id === id);
+        if (face) {
+            face.cropped_face = originalSrc || '';
+            delete face.enhanced_crop;
+        }
+    });
+    originalFaceCrops = {};
+    document.getElementById('revertEnhanceBtn').style.display = 'none';
+}
+
+/* ========================================================================
+   ANALYZE FACES
+   ======================================================================== */
+async function analyzeFaces() {
+    if (selectedFaces.size === 0) { alert('Please select at least one face'); return; }
+    showLoading('Analyzing emotions...');
+    const acceptedFaces = detectedFaces.filter(f => selectedFaces.has(f.id));
+    try {
+        const response = await fetch('/analyze_faces', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filepath: currentImagePath, accepted_faces: acceptedFaces })
+        });
+        const data = await response.json();
+        analysisResults = data;
+        displayResults(data);
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred during analysis');
+    } finally { hideLoading(); }
+}
+
+/* ========================================================================
+   DISPLAY RESULTS (new analysis)
+   ======================================================================== */
+const EMOTION_COLORS = {
+    happy: 'var(--emotion-happy)',
+    sad: 'var(--emotion-sad)',
+    angry: 'var(--emotion-angry)',
+    surprise: 'var(--emotion-surprise)',
+    fear: 'var(--emotion-fear)',
+    disgust: 'var(--emotion-disgust)',
+    neutral: 'var(--emotion-neutral)'
+};
+
+function getDominant(emotions) {
+    let max = 0, dom = 'neutral';
+    for (const [e, v] of Object.entries(emotions)) { if (v > max) { max = v; dom = e; } }
+    return dom;
+}
+
+function buildFaceResultCard(faceId, emotions) {
+    const dominant = getDominant(emotions);
+    const dominantColor = EMOTION_COLORS[dominant] || 'var(--text-muted)';
+
+    let barsHtml = '';
+    for (const [emotion, value] of Object.entries(emotions)) {
+        const color = EMOTION_COLORS[emotion] || 'var(--text-muted)';
+        const w = Math.max(0, Math.min(100, value));
+        barsHtml += `
+            <div class="emotion-bar-row">
+                <span class="emotion-label" style="color:${color}">${emotion.charAt(0).toUpperCase() + emotion.slice(1)}</span>
+                <div class="emotion-track">
+                    <div class="emotion-fill" style="width:${w}%;background:${color};"></div>
+                </div>
+                <span class="emotion-value">${value.toFixed(1)}%</span>
+            </div>`;
+    }
+
+    return `
+        <div class="face-result-card">
+            <div class="face-result-header">
+                <div class="face-result-info">
+                    <div class="face-result-icon">${faceId}</div>
+                    <div>
+                        <div class="face-result-title">Face ${faceId}</div>
+                        <div class="face-result-subtitle">Detected region</div>
+                    </div>
+                </div>
+                <span class="dominant-badge" style="color:${dominantColor}">${dominant.toUpperCase()}</span>
+            </div>
+            ${barsHtml}
+            <button class="btn btn-outline edit-emotions-btn" onclick="openEditModal(${faceId})">
+                <i class="fas fa-pen"></i> Edit Emotions
+            </button>
+        </div>`;
+}
+
+function displayResults(data) {
+    isViewingArchiveEntry = false;
+    currentArchiveImagePath = null;
+    currentArchiveCustomName = '';
+
+    const container = document.getElementById('resultsContainer');
+    container.innerHTML = '';
+
+    data.results.forEach(result => {
+        container.innerHTML += buildFaceResultCard(result.face_id, result.emotions);
+    });
+
+    document.getElementById('resultsCountBadge').textContent = data.results.length + ' face' + (data.results.length !== 1 ? 's' : '');
+
+    // Image
+    const imgContainer = document.getElementById('finalImageContainer');
+    const imagePath = data.output_image.startsWith('/uploads/') ? data.output_image : '/uploads/' + data.output_image;
+    imgContainer.innerHTML = `
+        <h3 class="card-heading"><i class="fas fa-image"></i> Analyzed Image</h3>
+        <img src="${imagePath}" alt="Analyzed image with emotion overlays" onerror="console.error('Failed to load:', this.src)">`;
+    imgContainer.style.display = '';
+
+    showSection('resultsSection');
+    scrollToSection('resultsSection');
+    updateActionButtons();
+}
+
+function displayArchivedResults(analyzedImagePath, facesEmotions, customName = '') {
+    isViewingArchiveEntry = true;
+    currentArchiveImagePath = analyzedImagePath;
+    currentArchiveCustomName = customName;
+
+    const results = [];
+    for (const [faceId, faceData] of Object.entries(facesEmotions)) {
+        const emotions = faceData.emotions || faceData;
+        const coordinates = faceData.coordinates || {};
+        results.push({ face_id: parseInt(faceId), emotions, coordinates });
+    }
+    analysisResults = { results };
+
+    const container = document.getElementById('resultsContainer');
+    container.innerHTML = '';
+    results.forEach(r => { container.innerHTML += buildFaceResultCard(r.face_id, r.emotions); });
+
+    document.getElementById('resultsCountBadge').textContent = results.length + ' face' + (results.length !== 1 ? 's' : '');
+
+    const imgContainer = document.getElementById('finalImageContainer');
+    imgContainer.innerHTML = `
+        <h3 class="card-heading"><i class="fas fa-image"></i> Analyzed Image</h3>
+        <img src="${analyzedImagePath}" alt="Analyzed image" onerror="console.error('Failed to load:', this.src)">`;
+    imgContainer.style.display = '';
+
+    showSection('resultsSection');
+    requestAnimationFrame(() => {
+        document.getElementById('finalImageContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    updateActionButtons();
+}
+
+function updateActionButtons() {
+    const submitBtn = document.getElementById('submitButton');
+    const deleteBtn = document.getElementById('deleteCurrentButton');
+    const nameCard = document.getElementById('customNameContainer');
+    const nameInput = document.getElementById('customNameInput');
+    const downloadBtn = document.getElementById('downloadArchiveBtn');
+
+    const loggedIn = !!_authToken;
+    const saveSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px;" aria-hidden="true"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"></path><path d="M7 3v4a1 1 0 0 0 1 1h7"></path></svg>';
+
+    if (isViewingArchiveEntry) {
+        submitBtn.innerHTML = saveSvg + ' Save Changes';
+        submitBtn.disabled = !loggedIn;
+        submitBtn.title = loggedIn ? '' : 'Log in to save changes';
+        deleteBtn.style.display = '';
+        downloadBtn.style.display = '';
+        nameCard.classList.add('visible');
+        nameInput.value = currentArchiveCustomName;
+    } else {
+        submitBtn.innerHTML = saveSvg + ' Submit to Database';
+        submitBtn.disabled = !loggedIn;
+        submitBtn.title = loggedIn ? '' : 'Log in to add entries to the archive';
+        deleteBtn.style.display = 'none';
+        downloadBtn.style.display = 'none';
+        nameCard.classList.remove('visible');
+    }
+}
+
+/* ========================================================================
+   EDIT EMOTIONS MODAL
+   ======================================================================== */
+function openEditModal(faceId) {
+    const result = analysisResults.results.find(r => r.face_id === faceId);
+    if (!result) return;
+    currentEditingFace = result;
+    document.getElementById('editingFaceId').textContent = faceId;
+
+    const container = document.getElementById('emotionInputs');
+    container.innerHTML = '';
+
+    Object.entries(result.emotions).forEach(([emotion, value]) => {
+        const color = EMOTION_COLORS[emotion] || 'var(--text-muted)';
+        const div = document.createElement('div');
+        div.className = 'edit-slider-row';
+        div.innerHTML = `
+            <div class="edit-slider-header">
+                <span class="edit-slider-label" style="color:${color}">${emotion.charAt(0).toUpperCase() + emotion.slice(1)}</span>
+                <span class="edit-slider-value" id="value-${emotion}">${value.toFixed(1)}%</span>
+            </div>
+            <input type="range" value="${value.toFixed(1)}" class="slider-${emotion}" step="0.1" min="0" max="100" data-emotion="${emotion}"
+                   oninput="updateEmotionSlider('${emotion}', this.value)">`;
+        container.appendChild(div);
+    });
+
+    updateEmotionTotal();
+    document.getElementById('editModal').classList.add('visible');
+}
+
+function updateEmotionSlider(emotion, value) {
+    const changedValue = parseFloat(value);
+    document.getElementById('value-' + emotion).textContent = changedValue.toFixed(1) + '%';
+
+    const inputs = Array.from(document.querySelectorAll('#emotionInputs input[type="range"]'));
+    let total = 0;
+    inputs.forEach(input => { total += parseFloat(input.value || 0); });
+
+    if (Math.abs(total - 100) > 0.1) {
+        const difference = total - 100;
+        const otherInputs = inputs.filter(i => i.dataset.emotion !== emotion);
+        let otherTotal = 0;
+        otherInputs.forEach(i => { otherTotal += parseFloat(i.value || 0); });
+
+        if (otherInputs.length > 0 && otherTotal > 0) {
+            otherInputs.forEach(i => {
+                const cv = parseFloat(i.value);
+                const proportion = cv / otherTotal;
+                const nv = Math.max(0, Math.min(100, cv - difference * proportion));
+                i.value = nv.toFixed(1);
+                document.getElementById('value-' + i.dataset.emotion).textContent = nv.toFixed(1) + '%';
+            });
+        }
+    }
+    updateEmotionTotal();
+}
+
+function updateEmotionTotal() {
+    const inputs = document.querySelectorAll('#emotionInputs input[type="range"]');
+    let total = 0;
+    inputs.forEach(i => { total += parseFloat(i.value || 0); });
+    const el = document.getElementById('totalEmotions');
+    el.textContent = 'Total: ' + total.toFixed(1) + '%';
+    el.className = 'edit-total ' + (Math.abs(total - 100) < 0.5 ? 'ok' : 'bad');
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').classList.remove('visible');
+    currentEditingFace = null;
+}
+
+async function saveEmotions() {
+    const inputs = document.querySelectorAll('#emotionInputs input[type="range"]');
+    const total = Array.from(inputs).reduce((s, i) => s + parseFloat(i.value || 0), 0);
+    if (Math.abs(total - 100) > 0.5) { alert('Total emotions must sum to ~100%'); return; }
+
+    const updatedEmotions = {};
+    inputs.forEach(i => { updatedEmotions[i.dataset.emotion] = parseFloat(i.value); });
+
+    const idx = analysisResults.results.findIndex(r => r.face_id === currentEditingFace.face_id);
+    if (idx !== -1) {
+        analysisResults.results[idx].emotions = updatedEmotions;
+        closeEditModal();
+        showLoading('Updating image...');
+
+        try {
+            const response = await fetch('/update_image_emotions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    image_path: isViewingArchiveEntry ? currentArchiveImagePath : analysisResults.output_image,
+                    emotions: analysisResults.results
+                })
+            });
+            const data = await response.json();
+            if (data.success) {
+                if (data.updated_image) analysisResults.output_image = data.updated_image;
+                if (isViewingArchiveEntry) {
+                    const facesData = Object.fromEntries(analysisResults.results.map(r => [r.face_id, { emotions: r.emotions, coordinates: r.coordinates || {} }]));
+                    hideAllSections();
+                    displayArchivedResults(data.updated_image || currentArchiveImagePath, facesData, currentArchiveCustomName);
+                } else { hideAllSections(); displayResults(analysisResults); }
+            } else { hideAllSections(); displayResults(analysisResults); }
+        } catch (error) { console.error('Error:', error); hideAllSections(); displayResults(analysisResults); }
+        finally { hideLoading(); }
+    }
+}
+
+/* ========================================================================
+   REANALYZE / SUBMIT / DELETE
+   ======================================================================== */
+function closeResults() {
+    ['resultsSection', 'facesSection', 'manualSelectionSection'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.classList.remove('visible');
+            if (el.classList.contains('card')) el.style.display = 'none';
+        }
+    });
+}
+
+async function reanalyzeEmotions() {
+    if (!analysisResults || !analysisResults.results) { alert('No results to reanalyze'); return; }
+    if (!confirm('This will overwrite current emotion values. Continue?')) return;
+    showLoading('Reanalyzing emotions...');
+
+    try {
+        const facesToAnalyze = analysisResults.results.map(r => ({
+            id: r.face_id, x: r.coordinates?.x || 0, y: r.coordinates?.y || 0,
+            w: r.coordinates?.w || 0, h: r.coordinates?.h || 0
+        }));
+
+        let imagePath;
+        if (isViewingArchiveEntry) {
+            const fn = currentArchiveImagePath.replace('/uploads/', '');
+            imagePath = fn.replace(/^analyzed_(.+)_\d{13}(\.\w+)$/, '$1$2');
+        } else { imagePath = currentImagePath; }
+
+        const response = await fetch('/analyze_faces', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filepath: imagePath, accepted_faces: facesToAnalyze })
+        });
+        const data = await response.json();
+        if (data.error) { alert('Error: ' + data.error); return; }
+        analysisResults = data;
+        hideAllSections();
+        if (isViewingArchiveEntry) {
+            const facesData = Object.fromEntries(data.results.map(r => [r.face_id, { emotions: r.emotions, coordinates: r.coordinates || {} }]));
+            displayArchivedResults(data.output_image ? '/uploads/' + data.output_image : currentArchiveImagePath, facesData, currentArchiveCustomName);
+        } else { displayResults(data); }
+        alert('Emotions reanalyzed successfully!');
+    } catch (error) { console.error('Error:', error); alert('Error during reanalysis'); }
+    finally { hideLoading(); }
+}
+
+async function submitToDatabase() {
+    if (!analysisResults) { alert('No results to submit'); return; }
+    showLoading('Saving results...');
+    try {
+        if (isViewingArchiveEntry) {
+            const customName = document.getElementById('customNameInput').value.trim();
+            const response = await fetch('/update_archive_entry', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image_path: currentArchiveImagePath, emotions: analysisResults.results, custom_name: customName })
+            });
+            const data = await response.json();
+            if (data.success) { alert('Changes saved!'); currentArchiveCustomName = customName; await loadSidebarArchive(); }
+            else alert('Error: ' + data.error);
+        } else {
+            const response = await fetch('/save_results', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...(_authToken ? {'Authorization': `Bearer ${_authToken}`} : {}) },
+                body: JSON.stringify({ image_path: analysisResults.output_image, emotions: analysisResults.results })
+            });
+            const data = await response.json();
+            if (data.success) {
+                alert('Results saved!');
+                await loadSidebarArchive();
+                const savedImagePath = '/uploads/' + analysisResults.output_image;
+                const savedEmotions = {};
+                analysisResults.results.forEach(r => { savedEmotions[r.face_id] = r.emotions; });
+                await loadArchiveFromSidebar(savedImagePath, savedEmotions, '');
+            } else alert('Error: ' + data.error);
+        }
+    } catch (error) { console.error('Error:', error); alert('Error while saving'); }
+    finally { hideLoading(); }
+}
+
+async function deleteCurrentArchiveEntry() {
+    if (!currentArchiveImagePath) { alert('No archive entry to delete'); return; }
+    await deleteArchiveEntry(currentArchiveImagePath);
+}
+
+/* ========================================================================
+   MANUAL FACE SELECTION
+   ======================================================================== */
+function enableManualSelection() {
+    if (!currentImagePath) { alert('No image loaded'); return; }
+    hideAllSections();
+    showSection('manualSelectionSection');
+
+    canvas = document.getElementById('manualSelectionCanvas');
+    ctx = canvas.getContext('2d');
+
+    baseImage = new Image();
+    baseImage.crossOrigin = 'anonymous';
+    baseImage.src = '/uploads/' + currentImagePath;
+    baseImage.onload = function() {
+        canvas.width = baseImage.width;
+        canvas.height = baseImage.height;
+        canvas.style.maxWidth = '100%';
+        ctx.drawImage(baseImage, 0, 0);
+    };
+
+    manualSelectionRects = [];
+    updateManualCount();
+
+    canvas.addEventListener('mousedown', handleMouseDown);
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mouseup', handleMouseUp);
+}
+
+function handleMouseDown(e) {
+    isDrawing = true;
+    const rect = canvas.getBoundingClientRect();
+    const sx = canvas.width / rect.width, sy = canvas.height / rect.height;
+    startX = (e.clientX - rect.left) * sx;
+    startY = (e.clientY - rect.top) * sy;
+}
+
+function handleMouseMove(e) {
+    if (!isDrawing) return;
+    const rect = canvas.getBoundingClientRect();
+    const sx = canvas.width / rect.width, sy = canvas.height / rect.height;
+    endX = (e.clientX - rect.left) * sx;
+    endY = (e.clientY - rect.top) * sy;
+    redrawCanvas();
+    ctx.strokeStyle = '#00ff00';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(startX, startY, endX - startX, endY - startY);
+}
+
+function handleMouseUp(e) {
+    if (!isDrawing) return;
+    isDrawing = false;
+    const rect = canvas.getBoundingClientRect();
+    const sx = canvas.width / rect.width, sy = canvas.height / rect.height;
+    endX = (e.clientX - rect.left) * sx;
+    endY = (e.clientY - rect.top) * sy;
+
+    const x = Math.min(startX, endX), y = Math.min(startY, endY);
+    const w = Math.abs(endX - startX), h = Math.abs(endY - startY);
+
+    if (w > 10 && h > 10) {
+        manualSelectionRects.push({ x: Math.round(x), y: Math.round(y), w: Math.round(w), h: Math.round(h), id: manualSelectionRects.length });
+        updateManualCount();
+        redrawCanvas();
+        document.getElementById('analyzeManualButton').disabled = false;
+    } else { alert('Selection too small.'); }
+}
+
+function updateManualCount() {
+    document.getElementById('manualSelectionCount').textContent = 'Selected faces: ' + manualSelectionRects.length;
+}
+
+function redrawCanvas() {
+    if (!baseImage) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(baseImage, 0, 0);
+    ctx.strokeStyle = '#00ff00';
+    ctx.lineWidth = 3;
+    manualSelectionRects.forEach(r => { ctx.strokeRect(r.x, r.y, r.w, r.h); });
+}
+
+function clearLastSelection() {
+    if (manualSelectionRects.length > 0) {
+        manualSelectionRects.pop();
+        redrawCanvas();
+        updateManualCount();
+        if (manualSelectionRects.length === 0) document.getElementById('analyzeManualButton').disabled = true;
+    }
+}
+
+function clearAllSelections() {
+    manualSelectionRects = [];
+    redrawCanvas();
+    updateManualCount();
+    document.getElementById('analyzeManualButton').disabled = true;
+}
+
+function cancelManualSelection() {
+    if (canvas) {
+        canvas.removeEventListener('mousedown', handleMouseDown);
+        canvas.removeEventListener('mousemove', handleMouseMove);
+        canvas.removeEventListener('mouseup', handleMouseUp);
+    }
+    clearAllSelections();
+    hideAllSections();
+    showSection('facesSection');
+}
+
+function addToDetectedFaces() {
+    if (manualSelectionRects.length === 0) { alert('No selection made'); return; }
+
+    const nextId = detectedFaces.length > 0 ? Math.max(...detectedFaces.map(f => f.id)) + 1 : 0;
+    const offscreen = document.createElement('canvas');
+    const offCtx = offscreen.getContext('2d');
+
+    manualSelectionRects.forEach((rect, i) => {
+        offscreen.width = rect.w;
+        offscreen.height = rect.h;
+        offCtx.drawImage(baseImage, rect.x, rect.y, rect.w, rect.h, 0, 0, rect.w, rect.h);
+        const cropDataUrl = offscreen.toDataURL('image/jpeg', 0.9);
+        detectedFaces.push({ id: nextId + i, x: rect.x, y: rect.y, w: rect.w, h: rect.h, cropped_face: cropDataUrl });
+    });
+
+    canvas.removeEventListener('mousedown', handleMouseDown);
+    canvas.removeEventListener('mousemove', handleMouseMove);
+    canvas.removeEventListener('mouseup', handleMouseUp);
+    displayFaces(detectedFaces);
+}
+
+/* ========================================================================
+   INIT
+   ======================================================================== */
+window.addEventListener('DOMContentLoaded', () => {
+    // Restore theme
+    const saved = localStorage.getItem('fer-theme');
+    if (saved && ['neural','glass','minimal'].includes(saved)) {
+        setTheme(saved);
+    } else {
+        updateBackground();
+    }
+
+    // Load archive
+    loadSidebarArchive();
+
+    // Search + filter listeners
+    document.getElementById('searchInput').addEventListener('input', filterArchiveItems);
+    document.getElementById('filterDateFrom').addEventListener('change', filterArchiveItems);
+    document.getElementById('filterDateTo').addEventListener('change', filterArchiveItems);
+
+    // Show source section by default
+    showSection('sourceSection');
+
+    // Auth: restore session
+    checkAuthSession();
+
+    // Handle password reset link (?reset_token=...)
+    const _urlParams = new URLSearchParams(window.location.search);
+    const _urlResetToken = _urlParams.get('reset_token');
+    if (_urlResetToken) {
+        _resetToken = _urlResetToken;
+        history.replaceState({}, '', window.location.pathname);
+        openAuthModal('resetPw');
+    }
+});
+
+/* ========================================================================
+   AUTH
+   ======================================================================== */
+let _authToken = localStorage.getItem('auth_token') || null;
+let _authEmail = null;
+let _authUsername = null;
+let _authAvatar = null;
+let _twofaEmail = null;
+let _twofaTimerInterval = null;
+let _verifyRegEmail = null;
+let _verifyRegTimerInterval = null;
+let _pendingRegisterAvatar = '';  // base64 for avatar chosen during registration
+
+function openAuthModal(view) {
+    if (view) {
+        showAuthView(view);
+    } else if (_authToken) {
+        showAuthView('loggedIn');
+    } else {
+        showAuthView('login');
+    }
+    document.getElementById('authModal').classList.add('visible');
+}
+
+function closeAuthModal() {
+    document.getElementById('authModal').classList.remove('visible');
+    clearTwofaTimer();
+}
+
+function showAuthView(view) {
+    ['authViewLogin','authView2fa','authViewRegister','authViewLoggedIn','authViewVerifyReg','authViewForgotPw','authViewResetPw']
+        .forEach(id => document.getElementById(id).style.display = 'none');
+    const map = { login: 'authViewLogin', '2fa': 'authView2fa',
+                  register: 'authViewRegister', loggedIn: 'authViewLoggedIn',
+                  verifyReg: 'authViewVerifyReg',
+                  forgotPw: 'authViewForgotPw', resetPw: 'authViewResetPw' };
+    document.getElementById(map[view]).style.display = '';
+    // Clear errors/successes
+    ['loginError','twofaError','registerError','registerSuccess','twofaSuccess','verifyRegError','verifyRegSuccess','profileError','profileSuccess','forgotPwError','forgotPwSuccess','resetPwError','resetPwSuccess']
+        .forEach(id => { const el = document.getElementById(id); if(el) el.style.display='none'; });
+    // Clear input fields per view
+    if (view === 'login') {
+        const e = document.getElementById('loginEmail');
+        const p = document.getElementById('loginPassword');
+        if (e) e.value = '';
+        if (p) p.value = '';
+    } else if (view === 'register') {
+        ['registerUsername','registerEmail','registerPassword','registerPassword2'].forEach(id => {
+            const el = document.getElementById(id); if (el) el.value = '';
+        });
+        _pendingRegisterAvatar = '';
+        const prev = document.getElementById('registerAvatarPreview');
+        if (prev) prev.innerHTML = '+<br>Photo';
+        // Reset pw requirements
+        ['regPwLen','regPwUpper','regPwDigit','regPwSpecial'].forEach(id => {
+            const el = document.getElementById(id); if (el) el.classList.remove('met');
+        });
+    } else if (view === 'verifyReg') {
+        const c = document.getElementById('verifyRegCode'); if (c) c.value = '';
+    } else if (view === 'forgotPw') {
+        const e = document.getElementById('forgotPwEmail'); if (e) e.value = '';
+    } else if (view === 'resetPw') {
+        ['resetPwPassword','resetPwPassword2'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+        ['resetPwLen','resetPwUpper','resetPwDigit','resetPwSpecial'].forEach(id => {
+            const el = document.getElementById(id); if (el) el.classList.remove('met');
+        });
+    }
+}
+
+function showAuthError(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.style.display = 'block';
+}
+
+function showAuthSuccessMsg(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.style.display = 'block';
+}
+
+async function submitLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    if (!email || !password) { showAuthError('loginError', 'Please fill in all fields'); return; }
+    try {
+        const res = await fetch('/auth/login', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) { showAuthError('loginError', data.error || 'Login failed'); return; }
+        _twofaEmail = email;
+        document.getElementById('twofa_email_label').textContent = email;
+        showAuthView('2fa');
+        startTwofaTimer(600);
+    } catch(e) { showAuthError('loginError', 'Network error'); }
+}
+
+async function submit2fa() {
+    const code = document.getElementById('twofaCode').value.trim();
+    if (code.length !== 6) { showAuthError('twofaError', 'Enter the 6-digit code'); return; }
+    try {
+        const res = await fetch('/auth/verify_2fa', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ email: _twofaEmail, code })
+        });
+        const data = await res.json();
+        if (!res.ok) { showAuthError('twofaError', data.error || 'Verification failed'); return; }
+        _authToken = data.token;
+        _authEmail = data.email;
+        _authUsername = data.username || '';
+        _authAvatar = data.avatar || '';
+        localStorage.setItem('auth_token', _authToken);
+        clearTwofaTimer();
+        updateSidebarAuth();
+        updateActionButtons();
+        loadSidebarArchive();
+        closeAuthModal();
+    } catch(e) { showAuthError('twofaError', 'Network error'); }
+}
+
+async function resend2fa() {
+    if (!_twofaEmail) return;
+    try {
+        const res = await fetch('/auth/login', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ email: _twofaEmail, password: document.getElementById('loginPassword').value })
+        });
+        const data = await res.json();
+        if (!res.ok) { showAuthError('twofaError', data.error || 'Failed to resend'); return; }
+        showAuthSuccessMsg('twofaSuccess', 'New code sent! Previous code has been invalidated.');
+        document.getElementById('twofaCode').value = '';
+        startTwofaTimer(600);
+    } catch(e) { showAuthError('twofaError', 'Network error'); }
+}
+
+function startTwofaTimer(seconds) {
+    clearTwofaTimer();
+    let remaining = seconds;
+    const el = document.getElementById('twofaTimer');
+    const tick = () => {
+        const m = Math.floor(remaining / 60);
+        const s = remaining % 60;
+        el.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+        if (remaining <= 0) { clearTwofaTimer(); el.textContent = 'Expired'; }
+        remaining--;
+    };
+    tick();
+    _twofaTimerInterval = setInterval(tick, 1000);
+}
+
+function clearTwofaTimer() {
+    if (_twofaTimerInterval) { clearInterval(_twofaTimerInterval); _twofaTimerInterval = null; }
+}
+
+async function submitRegister() {
+    const username = document.getElementById('registerUsername').value.trim();
+    const email = document.getElementById('registerEmail').value.trim();
+    const password = document.getElementById('registerPassword').value;
+    const password2 = document.getElementById('registerPassword2').value;
+    if (!username) { showAuthError('registerError', 'Username is required'); return; }
+    if (!email || !password) { showAuthError('registerError', 'Please fill in all fields'); return; }
+    if (password !== password2) { showAuthError('registerError', 'Passwords do not match'); return; }
+    const pwv = validatePassword(password);
+    if (!pwv.len || !pwv.upper || !pwv.digit || !pwv.special) {
+        showAuthError('registerError', 'Password does not meet the requirements below'); return;
+    }
+    try {
+        const res = await fetch('/auth/register', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ email, password, username, avatar: _pendingRegisterAvatar })
+        });
+        const data = await res.json();
+        if (!res.ok) { showAuthError('registerError', data.error || 'Registration failed'); return; }
+        _verifyRegEmail = email;
+        const label = document.getElementById('verifyReg_email_label');
+        if (label) label.textContent = email;
+        showAuthView('verifyReg');
+        startVerifyRegTimer();
+    } catch(e) { showAuthError('registerError', 'Network error'); }
+}
+
+async function submitVerifyRegistration() {
+    const code = document.getElementById('verifyRegCode').value.trim();
+    if (!code || code.length !== 6) { showAuthError('verifyRegError', 'Please enter the 6-digit code'); return; }
+    try {
+        const res = await fetch('/auth/verify_registration', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ email: _verifyRegEmail, code })
+        });
+        const data = await res.json();
+        if (!res.ok) { showAuthError('verifyRegError', data.error || 'Verification failed'); return; }
+        clearVerifyRegTimer();
+        showAuthSuccessMsg('verifyRegSuccess', 'Email verified! You can now log in.');
+        setTimeout(() => showAuthView('login'), 2000);
+    } catch(e) { showAuthError('verifyRegError', 'Network error'); }
+}
+
+async function resendRegistrationCode() {
+    if (!_verifyRegEmail) return;
+    try {
+        const res = await fetch('/auth/resend_verification', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ email: _verifyRegEmail })
+        });
+        const data = await res.json();
+        if (!res.ok) { showAuthError('verifyRegError', data.error || 'Could not resend code'); return; }
+        clearVerifyRegTimer();
+        startVerifyRegTimer();
+        showAuthSuccessMsg('verifyRegSuccess', 'New code sent! Check your email.');
+    } catch(e) { showAuthError('verifyRegError', 'Network error'); }
+}
+
+function startVerifyRegTimer() {
+    const el = document.getElementById('verifyRegTimer');
+    if (!el) return;
+    let remaining = 15 * 60;
+    const tick = () => {
+        const m = Math.floor(remaining / 60);
+        const s = remaining % 60;
+        el.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+        if (remaining <= 0) { clearVerifyRegTimer(); el.textContent = 'Expired'; }
+        remaining--;
+    };
+    tick();
+    _verifyRegTimerInterval = setInterval(tick, 1000);
+}
+
+function clearVerifyRegTimer() {
+    if (_verifyRegTimerInterval) { clearInterval(_verifyRegTimerInterval); _verifyRegTimerInterval = null; }
+}
+
+async function submitLogout() {
+    if (_authToken) {
+        await fetch('/auth/logout', {
+            method: 'POST', headers: {'Authorization': `Bearer ${_authToken}`}
+        }).catch(() => {});
+    }
+    _authToken = null;
+    _authEmail = null;
+    _authUsername = null;
+    _authAvatar = null;
+    localStorage.removeItem('auth_token');
+    closeResults();
+    isViewingArchiveEntry = false;
+    analysisResults = null;
+    updateSidebarAuth();
+    updateActionButtons();
+    loadSidebarArchive();
+    closeAuthModal();
+}
+
+function _setAvatarEl(el, avatarDataUrl, fallbackText) {
+    if (!el) return;
+    if (avatarDataUrl) {
+        el.innerHTML = `<img src="${avatarDataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+    } else {
+        el.innerHTML = `<span>${fallbackText}</span>`;
+    }
+}
+
+function updateSidebarAuth() {
+    const authButtons = document.getElementById('sidebarAuthButtons');
+    const userProfile = document.getElementById('sidebarUserProfile');
+    const avatarEl = document.getElementById('sidebarAvatar');
+    const name = document.getElementById('sidebarUserName');
+    const role = document.getElementById('sidebarUserRole');
+    const bigAvatarEl = document.getElementById('authAvatarBig');
+    const loggedEmail = document.getElementById('authLoggedEmail');
+    if (_authEmail) {
+        if (authButtons) authButtons.style.display = 'none';
+        if (userProfile) userProfile.style.display = '';
+        const initials = (_authUsername || _authEmail).slice(0,2).toUpperCase();
+        _setAvatarEl(avatarEl, _authAvatar, initials);
+        _setAvatarEl(bigAvatarEl, _authAvatar, initials);
+        if (name) name.textContent = _authUsername || _authEmail;
+        if (role) role.textContent = 'Logged in';
+        if (loggedEmail) loggedEmail.value = _authEmail;
+        const unEl = document.getElementById('profileUsername');
+        if (unEl) unEl.value = _authUsername || '';
+        const cpEl = document.getElementById('profileCurrentPw');
+        const npEl = document.getElementById('profileNewPw');
+        if (cpEl) cpEl.value = '';
+        if (npEl) npEl.value = '';
+    } else {
+        if (authButtons) authButtons.style.display = 'flex';
+        if (userProfile) userProfile.style.display = 'none';
+        _setAvatarEl(bigAvatarEl, null, '?');
+        if (loggedEmail) loggedEmail.value = '';
+    }
+}
+
+async function submitUpdateProfile() {
+    const username = document.getElementById('profileUsername').value.trim();
+    const currentPw = document.getElementById('profileCurrentPw').value;
+    const newPw = document.getElementById('profileNewPw').value;
+    if (!username) { showAuthError('profileError', 'Username cannot be empty'); return; }
+
+    const payload = { username, avatar: _authAvatar };
+    if (newPw) {
+        if (!currentPw) { showAuthError('profileError', 'Enter your current password to change it'); return; }
+        const pwv = validatePassword(newPw);
+        if (!pwv.len || !pwv.upper || !pwv.digit || !pwv.special) {
+            showAuthError('profileError', 'New password does not meet the requirements'); return;
+        }
+        payload.current_password = currentPw;
+        payload.new_password = newPw;
+    }
+
+    try {
+        const res = await fetch('/auth/update_profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${_authToken}` },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) { showAuthError('profileError', data.error || 'Update failed'); return; }
+        _authUsername = data.username;
+        _authAvatar = data.avatar;
+        updateSidebarAuth();
+        showAuthSuccessMsg('profileSuccess', 'Profile updated!');
+    } catch(e) { showAuthError('profileError', 'Network error'); }
+}
+
+function validatePassword(pw) {
+    return {
+        len:     pw.length >= 8,
+        upper:   /[A-Z]/.test(pw),
+        digit:   /[0-9]/.test(pw),
+        special: /[^A-Za-z0-9]/.test(pw)
+    };
+}
+
+function checkPwRequirements(pw, listId) {
+    const v = validatePassword(pw);
+    const map = { regPwReqs: 'regPw', profilePwReqs: 'profilePw', resetPwReqs: 'resetPw' };
+    const prefix = map[listId] || 'regPw';
+    document.getElementById(prefix + 'Len').classList.toggle('met', v.len);
+    document.getElementById(prefix + 'Upper').classList.toggle('met', v.upper);
+    document.getElementById(prefix + 'Digit').classList.toggle('met', v.digit);
+    document.getElementById(prefix + 'Special').classList.toggle('met', v.special);
+}
+
+let _resetToken = null;
+
+async function submitForgotPassword() {
+    const email = document.getElementById('forgotPwEmail').value.trim();
+    if (!email) { showAuthError('forgotPwError', 'Please enter your email'); return; }
+    try {
+        const res = await fetch('/auth/forgot_password', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        if (!res.ok) { showAuthError('forgotPwError', data.error || 'Error'); return; }
+        showAuthSuccessMsg('forgotPwSuccess', data.message);
+    } catch(e) { showAuthError('forgotPwError', 'Network error'); }
+}
+
+async function submitResetPassword() {
+    const password = document.getElementById('resetPwPassword').value;
+    const password2 = document.getElementById('resetPwPassword2').value;
+    if (password !== password2) { showAuthError('resetPwError', 'Passwords do not match'); return; }
+    const pwv = validatePassword(password);
+    if (!pwv.len || !pwv.upper || !pwv.digit || !pwv.special) {
+        showAuthError('resetPwError', 'Password does not meet the requirements'); return;
+    }
+    try {
+        const res = await fetch('/auth/reset_password', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ token: _resetToken, password })
+        });
+        const data = await res.json();
+        if (!res.ok) { showAuthError('resetPwError', data.error || 'Reset failed'); return; }
+        _resetToken = null;
+        showAuthSuccessMsg('resetPwSuccess', data.message);
+        setTimeout(() => showAuthView('login'), 2500);
+    } catch(e) { showAuthError('resetPwError', 'Network error'); }
+}
+
+function previewRegisterAvatar(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        _pendingRegisterAvatar = e.target.result;
+        const el = document.getElementById('registerAvatarPreview');
+        if (el) el.innerHTML = `<img src="${_pendingRegisterAvatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+    };
+    reader.readAsDataURL(file);
+}
+
+function previewProfileAvatar(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        _authAvatar = e.target.result;
+        _setAvatarEl(document.getElementById('authAvatarBig'), _authAvatar, '');
+    };
+    reader.readAsDataURL(file);
+}
+
+async function checkAuthSession() {
+    if (!_authToken) return;
+    try {
+        const res = await fetch('/auth/me', {
+            headers: {'Authorization': `Bearer ${_authToken}`}
+        });
+        const data = await res.json();
+        if (data.logged_in) {
+            _authEmail = data.email;
+            _authUsername = data.username || '';
+            _authAvatar = data.avatar || '';
+            updateSidebarAuth();
+            updateActionButtons();
+        } else {
+            _authToken = null;
+            localStorage.removeItem('auth_token');
+            updateActionButtons();
+        }
+    } catch(e) { /* offline - keep token */ }
+}
+</script>
+
+
+</body>
+</html>
